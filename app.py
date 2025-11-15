@@ -15,7 +15,7 @@ st.set_page_config(
     page_title="Little Star Rabbit",
     page_icon="🌟",
     layout="centered",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
 # Custom CSS styling
@@ -1042,45 +1042,40 @@ def show_admin_mode():
         show_admin_login()
         return
 
-    # Show sidebar navigation
-    st.sidebar.title("🔒 Grown-ups' Corner")
-    st.sidebar.markdown("**Navigation Menu**")
+    # Header with exit button
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.title("🔒 Grown-ups' Corner")
+    with col2:
+        if st.button("🚪 Exit", use_container_width=True):
+            st.session_state["admin_authenticated"] = False
+            st.session_state["mode"] = "landing"
+            st.rerun()
 
-    admin_pages = {
-        "profile": "👤 Child Profile",
-        "content": "⚙️ Content Settings",
-        "affirmations": "💝 Affirmations & Lessons",
-        "time": "⏰ Time & Limits",
-        "safety": "🔐 Safety & API"
-    }
+    st.markdown("---")
 
-    selected_page = st.sidebar.radio(
-        "Navigation",
-        list(admin_pages.keys()),
-        format_func=lambda x: admin_pages[x],
-        key="admin_nav"
-    )
+    # Main navigation using tabs - all sections visible at once!
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+        "👤 Child Profile",
+        "⚙️ Content Settings",
+        "💝 Affirmations & Lessons",
+        "⏰ Time & Limits",
+        "🔐 Safety & API"
+    ])
 
-    st.session_state["admin_page"] = selected_page
-
-    if st.sidebar.button("🚪 Exit Admin Mode"):
-        st.session_state["admin_authenticated"] = False
-        st.session_state["mode"] = "landing"
-        st.rerun()
-
-    st.sidebar.markdown("---")
-    st.sidebar.caption(f"Logged in • {datetime.now().strftime('%H:%M')}")
-
-    # Route to appropriate admin page
-    if st.session_state["admin_page"] == "profile":
+    with tab1:
         show_admin_profile()
-    elif st.session_state["admin_page"] == "content":
+
+    with tab2:
         show_admin_content()
-    elif st.session_state["admin_page"] == "affirmations":
+
+    with tab3:
         show_admin_affirmations()
-    elif st.session_state["admin_page"] == "time":
+
+    with tab4:
         show_admin_time()
-    elif st.session_state["admin_page"] == "safety":
+
+    with tab5:
         show_admin_safety()
 
 def show_admin_login():
@@ -1116,22 +1111,8 @@ def show_admin_login():
 
 def show_admin_profile():
     """Admin: Child profile settings"""
-    st.title("👤 Child Profile")
-    st.markdown("Customize the app for your child")
-
-    st.warning("""
-    **📍 To access other admin sections:**
-
-    Look for the **>** arrow in the **top-left corner** of your screen.
-
-    Click it to open the sidebar menu where you'll find:
-    - ⚙️ Content Settings
-    - 💝 Affirmations & Lessons
-    - ⏰ Time & Limits
-    - 🔐 Safety & API
-    """)
-
-    st.markdown("---")
+    st.markdown("### Customize the app for your child")
+    st.markdown("")
 
     with st.form("profile_form"):
         name = st.text_input("Child's name / nickname", value=profile.get("child_name", "Little Star"))
