@@ -57,6 +57,22 @@ def inject_css():
                 linear-gradient(180deg, #ffb6d9 0%, #ffd4e5 30%, #ffe5f0 60%, #fff0f5 100%);
             color: #4a1942;
         }
+
+        /* Cute floating doodles */
+        .cute-doodle {
+            position: fixed;
+            font-size: 2rem;
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+            animation: gentle-float 8s ease-in-out infinite;
+        }
+
+        @keyframes gentle-float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
         .block-container {
             padding-top: 3rem;
             padding-bottom: 3rem;
@@ -312,6 +328,18 @@ def scroll_to_top():
         """,
         height=0,
     )
+
+# Add cute doodles to the page
+def add_cute_doodles():
+    """Add cute floating doodles to the background"""
+    st.markdown("""
+        <div class="cute-doodle" style="top: 10%; right: 8%;">💕</div>
+        <div class="cute-doodle" style="top: 25%; left: 5%; animation-delay: 1s;">⭐</div>
+        <div class="cute-doodle" style="top: 60%; right: 12%; animation-delay: 2s;">✨</div>
+        <div class="cute-doodle" style="top: 80%; left: 15%; animation-delay: 3s;">🌸</div>
+        <div class="cute-doodle" style="top: 45%; left: 90%; animation-delay: 1.5s;">🦋</div>
+        <div class="cute-doodle" style="top: 70%; right: 85%; animation-delay: 2.5s;">🌈</div>
+    """, unsafe_allow_html=True)
 
 # Data directory setup
 DATA_DIR = Path("data")
@@ -1657,6 +1685,9 @@ def main():
 
     # Inject custom CSS for beautiful starry theme
     inject_css()
+
+    # Add cute floating doodles
+    add_cute_doodles()
 
     # Route to appropriate mode
     if st.session_state["mode"] == "landing":
