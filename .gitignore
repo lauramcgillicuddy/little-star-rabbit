@@ -1,0 +1,49 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.env
+.venv
+venv/
+env/
+
+# ---- Streamlit ----
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# ---- Jupyter (if you use notebooks) ----
+.ipynb_checkpoints/
+*.ipynb_convert
+
+# ---- OS / editor noise ----
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# ---- Logs ----
+*.log
+
+# ---- API keys / configs ----
+config/settings.yaml
+config/filters.json
+config/affirmations.json
+config/lessons.json
+*.secret
+*.key
+*.token
+
+# ---- Virtual envs ----
+*.env
+.env.*
+
+# ---- Cache ----
+.cache/
+__pycache__/
