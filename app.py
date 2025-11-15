@@ -27,13 +27,24 @@ def inject_css():
         /* --- IMPORT FONTS --- */
         @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Patrick+Hand&display=swap');
 
-        /* --- GENERAL LAYOUT --- */
-        .stApp {
-            background: radial-gradient(circle at top, #ffeef7 0%, #fff4ea 40%, #ffe9f2 100%);
+        /* --- GLOBAL FONT OVERRIDES --- */
+        .stApp, .block-container, .stMarkdown, .stText, .stTextInput, .stNumberInput,
+        .stRadio, .stSelectbox, .stTextarea, .stCheckbox, .stButton > button,
+        .stTabs [data-baseweb="tab"], label, p, div {
             font-family: "Baloo 2", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            color: #2B102A;
         }
 
+        /* Use Patrick Hand for tiny helper text */
+        .lsr-note {
+            font-family: "Patrick Hand", "Baloo 2", system-ui, sans-serif;
+            font-size: 0.95rem;
+        }
+
+        /* Background + layout */
+        .stApp {
+            background: radial-gradient(circle at top, #ffeef7 0%, #fff4ea 40%, #ffe9f2 100%);
+            color: #2B102A;
+        }
         .block-container {
             padding-top: 3rem;
             padding-bottom: 3rem;
@@ -43,33 +54,26 @@ def inject_css():
         #MainMenu, footer {visibility: hidden;}
         header {visibility: hidden;}
 
-        /* --- TITLES --- */
-        .lsr-hero-title, h1, h2, h3 {
-            font-family: "Baloo 2", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        /* Titles */
+        h1, h2, h3, .lsr-hero-title {
+            font-family: "Baloo 2", system-ui, sans-serif;
             letter-spacing: 0.03em;
         }
-
         .lsr-hero-title {
             font-size: 3rem;
             font-weight: 700;
             text-align: center;
             margin-bottom: 0.3rem;
         }
-
         .lsr-hero-subtitle {
             text-align: center;
             font-size: 1rem;
             color: #8a5574;
             margin-bottom: 2.2rem;
-        }
-
-        /* Handwritten little bits */
-        .lsr-note, .lsr-small {
             font-family: "Patrick Hand", "Baloo 2", system-ui, sans-serif;
-            font-size: 0.95rem;
         }
 
-        /* --- BIG CTA BUTTONS --- */
+        /* Big CTA buttons on landing */
         .lsr-cta-row {
             display: flex;
             gap: 1rem;
@@ -77,7 +81,7 @@ def inject_css():
             margin-top: 1rem;
             margin-bottom: 2rem;
         }
-        .lsr-cta {
+        .lsr-cta-main {
             border-radius: 999px;
             padding: 0.9rem 2.6rem;
             border: none;
@@ -100,59 +104,57 @@ def inject_css():
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
         }
 
-        /* --- CHILD HUB CARDS --- */
-        .lsr-card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-            margin-bottom: 2rem;
+        /* Tabs */
+        .stTabs [data-baseweb="tab"] {
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding-top: 0.4rem;
+            padding-bottom: 0.4rem;
         }
 
-        .lsr-card {
+        /* Child hub card buttons - make entire card clickable */
+        div[data-testid="stButton"] > button {
             border-radius: 1.6rem;
             padding: 1.6rem 1.4rem;
             background: linear-gradient(145deg, #ffffff, #ffe9f4);
             box-shadow: 0 18px 40px rgba(242, 125, 144, 0.35);
             text-align: left;
+            border: none;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            justify-content: flex-start;
+            cursor: pointer;
             transition: transform 0.15s ease, box-shadow 0.15s ease;
+            white-space: normal;
+            height: auto;
+            min-height: 180px;
         }
-
-        .lsr-card:hover {
+        div[data-testid="stButton"] > button:hover {
             transform: translateY(-4px);
             box-shadow: 0 22px 50px rgba(242, 125, 144, 0.45);
         }
 
         .lsr-card-icon {
-            font-size: 2rem;
-            margin-bottom: 0.6rem;
+            font-size: 2.5rem;
+            margin-bottom: 0.8rem;
+            display: block;
         }
         .lsr-card-title {
             font-size: 1.25rem;
             font-weight: 700;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.4rem;
+            display: block;
+            color: #2B102A;
         }
         .lsr-card-sub {
             font-size: 0.95rem;
             color: #8a5574;
-            margin-bottom: 1.2rem;
-        }
-        .lsr-card-button {
-            display: inline-block;
-            border-radius: 999px;
-            padding: 0.45rem 1.3rem;
-            font-size: 0.85rem;
-            border: 1px solid #ffd0e1;
-            background: #fffdfb;
-            color: #4a2037;
-            font-weight: 500;
             font-family: "Patrick Hand", "Baloo 2", system-ui, sans-serif;
+            display: block;
+            line-height: 1.4;
         }
 
-        /* --- STORY BOX --- */
+        /* Story box */
         .lsr-story-box {
             border-radius: 1.4rem;
             padding: 1.4rem 1.6rem;
@@ -163,7 +165,7 @@ def inject_css():
             font-size: 1.02rem;
         }
 
-        /* --- FACT BOX --- */
+        /* Fact box */
         .lsr-fact-box {
             border-radius: 1.4rem;
             padding: 1.4rem 1.6rem;
@@ -174,7 +176,7 @@ def inject_css():
             font-size: 1.02rem;
         }
 
-        /* --- FEELING BOXES --- */
+        /* Feeling boxes */
         .lsr-feeling-box {
             border-radius: 1.2rem;
             padding: 1.3rem 1.5rem;
@@ -196,8 +198,14 @@ def inject_css():
             text-align: center;
         }
 
-        /* --- BUTTONS --- */
-        .stButton > button {
+        /* Regular buttons (non-card) */
+        .stButton > button[kind="primary"] {
+            background: linear-gradient(90deg, #f9739a, #f27d90);
+            color: white;
+            border: none;
+        }
+
+        .stButton > button:not([data-testid]) {
             border-radius: 999px;
             font-weight: 500;
             padding: 0.6rem 1.5rem;
@@ -205,18 +213,14 @@ def inject_css():
             transition: all 0.2s ease;
         }
 
-        .stButton > button:hover {
+        .stButton > button:not([data-testid]):hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(242, 125, 144, 0.3);
         }
 
-        /* --- STREAMLIT WIDGETS --- */
-        .stRadio > label {
-            font-weight: 500;
-            color: #4a2037;
-        }
-
-        .stTextInput > label, .stNumberInput > label, .stSelectbox > label {
+        /* Streamlit widgets */
+        .stRadio > label, .stSelectbox > label, .stTextInput > label,
+        .stNumberInput > label, .stTextarea > label {
             font-weight: 500;
             color: #4a2037;
         }
@@ -290,7 +294,6 @@ DEFAULT_SETTINGS = {
     "session_length_minutes": 10,
     "quiet_hours_start": "21:00",
     "quiet_hours_end": "07:00",
-    "api_key": "",
     "model": "gpt-4o-mini",
     "temperature": 0.7,
     "max_tokens": 500
@@ -442,10 +445,30 @@ def check_usage_limit():
 
 # OpenAI helper
 def get_openai_client():
-    """Get OpenAI client"""
-    if not settings.get("api_key"):
+    """Get OpenAI client using environment variable"""
+    try:
+        return OpenAI()  # Uses OPENAI_API_KEY from environment
+    except Exception:
         return None
-    return OpenAI(api_key=settings["api_key"])
+
+def synthesize_story_audio(text):
+    """Convert story text to speech using OpenAI TTS"""
+    if not text:
+        return None
+    try:
+        client = get_openai_client()
+        if not client:
+            return None
+
+        response = client.audio.speech.create(
+            model="tts-1",
+            voice="nova",  # Warm, friendly female voice
+            input=text
+        )
+        return response.content
+    except Exception as e:
+        st.error(f"Could not generate audio: {str(e)}")
+        return None
 
 def generate_story(length, theme, tone):
     """Generate a kid-safe story"""
@@ -605,41 +628,67 @@ def show_child_mode():
 def show_child_home():
     """Child mode home hub with activity cards"""
     st.markdown(f"<h1 style='text-align:center;'>Hello, {profile['child_name']}! 🌟</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center;color:#8a5574;'>What would you like to do today?</p>", unsafe_allow_html=True)
+    st.markdown("<p class='lsr-note' style='text-align:center;'>What would you like to do today?</p>", unsafe_allow_html=True)
 
-    # Activity cards
-    activities = [
-        {"name": "Storytime", "emoji": "🌙", "page": "storytime", "desc": "Snuggle in for a cozy story"},
-        {"name": "Star Facts", "emoji": "✨", "page": "facts", "desc": "Let's learn something cool together"},
-        {"name": "Feelings & Stars", "emoji": "💖", "page": "feelings", "desc": "How's your little star-heart today?"},
-        {"name": "Little Lessons", "emoji": "🧠", "page": "lessons", "desc": "Tiny ideas for your big brain"},
-        {"name": "Calm Burrow", "emoji": "🐚", "page": "calm", "desc": "Soft, quiet time in the bunny burrow"},
-    ]
+    # HTML template for card content
+    card_html = """
+    <div class='lsr-card-icon'>{icon}</div>
+    <div class='lsr-card-title'>{title}</div>
+    <div class='lsr-card-sub'>{subtitle}</div>
+    """
 
-    # Create card grid with buttons
-    for i in range(0, len(activities), 2):
-        cols = st.columns(2, gap="large")
-        for j, col in enumerate(cols):
-            if i + j < len(activities):
-                activity = activities[i + j]
-                with col:
-                    st.markdown(f"""
-                        <div class='lsr-card'>
-                            <div>
-                                <div class='lsr-card-icon'>{activity['emoji']}</div>
-                                <div class='lsr-card-title'>{activity['name']}</div>
-                                <div class='lsr-card-sub'>{activity['desc']}</div>
-                            </div>
-                        </div>
-                    """, unsafe_allow_html=True)
+    # Activity cards - entire card is clickable
+    col1, col2 = st.columns(2, gap="large")
+    with col1:
+        if st.button(
+            card_html.format(icon="🌙", title="Storytime", subtitle="Snuggle in for a cozy story"),
+            key="card_storytime",
+            use_container_width=True
+        ):
+            st.session_state["child_page"] = "storytime"
+            st.rerun()
 
-                    if st.button(f"Go", key=activity['page'], use_container_width=True):
-                        st.session_state["child_page"] = activity['page']
-                        st.rerun()
+    with col2:
+        if st.button(
+            card_html.format(icon="✨", title="Star Facts", subtitle="Let's learn something cool together"),
+            key="card_facts",
+            use_container_width=True
+        ):
+            st.session_state["child_page"] = "facts"
+            st.rerun()
+
+    col3, col4 = st.columns(2, gap="large")
+    with col3:
+        if st.button(
+            card_html.format(icon="💖", title="Feelings & Stars", subtitle="How's your little star-heart today?"),
+            key="card_feelings",
+            use_container_width=True
+        ):
+            st.session_state["child_page"] = "feelings"
+            st.rerun()
+
+    with col4:
+        if st.button(
+            card_html.format(icon="🧠", title="Little Lessons", subtitle="Tiny ideas for your big brain"),
+            key="card_lessons",
+            use_container_width=True
+        ):
+            st.session_state["child_page"] = "lessons"
+            st.rerun()
+
+    col5, col6 = st.columns(2, gap="large")
+    with col5:
+        if st.button(
+            card_html.format(icon="🐚", title="Calm Burrow", subtitle="Soft, quiet time in the bunny burrow"),
+            key="card_calm",
+            use_container_width=True
+        ):
+            st.session_state["child_page"] = "calm"
+            st.rerun()
 
     # Exit button
     st.markdown("<br><br>", unsafe_allow_html=True)
-    if st.button("👋 All done for now", use_container_width=True):
+    if st.button("👋 All done for now", key="exit_child", use_container_width=True):
         st.session_state["mode"] = "landing"
         st.session_state["child_page"] = "home"
         st.rerun()
@@ -684,13 +733,22 @@ def show_storytime():
 
         st.markdown("<br>", unsafe_allow_html=True)
 
+        # Text-to-speech button
+        if st.button("🔊 Read this story out loud", key="tts_story", use_container_width=True):
+            with st.spinner("🎤 Getting ready to read..."):
+                audio_bytes = synthesize_story_audio(st.session_state["current_story"])
+                if audio_bytes:
+                    st.audio(audio_bytes, format="audio/mp3")
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
         col1, col2 = st.columns(2)
         with col1:
-            if st.button("📖 Tell me another story", use_container_width=True):
+            if st.button("📖 Tell me another story", key="another_story", use_container_width=True):
                 st.session_state["current_story"] = None
                 st.rerun()
         with col2:
-            if st.button("✅ That's enough for today", use_container_width=True):
+            if st.button("✅ That's enough for today", key="done_story", use_container_width=True):
                 st.session_state["current_story"] = None
                 st.session_state["child_page"] = "home"
                 st.rerun()
@@ -1324,12 +1382,10 @@ def show_admin_safety():
         st.markdown("---")
         st.subheader("OpenAI API Settings")
 
-        api_key = st.text_input(
-            "API Key",
-            type="password",
-            value=settings.get("api_key", ""),
-            help="Your OpenAI API key"
-        )
+        st.info("""
+            **Note:** The OpenAI API key is read from the `OPENAI_API_KEY` environment variable.
+            Set this on your server or in your Streamlit Cloud secrets.
+        """)
 
         model = st.selectbox(
             "Model",
@@ -1354,7 +1410,7 @@ def show_admin_safety():
             step=100
         )
 
-        if st.form_submit_button("💾 Save Safety Settings", use_container_width=True):
+        if st.form_submit_button("💾 Save Settings", use_container_width=True):
             # Update PIN if provided
             if new_pin:
                 if new_pin == confirm_pin:
@@ -1364,20 +1420,19 @@ def show_admin_safety():
                     st.error("❌ PINs don't match!")
                     st.stop()
 
-            # Update API settings
-            settings["api_key"] = api_key
+            # Update API settings (but not API key)
             settings["model"] = model
             settings["temperature"] = temperature
             settings["max_tokens"] = max_tokens
 
             save_settings()
-            st.success("✅ Safety settings saved!")
+            st.success("✅ Settings saved!")
             st.rerun()
 
     st.markdown("---")
     st.info("""
-        **Security Note:** API keys are stored locally in `data/settings.json`.
-        Make sure this file is not shared or committed to version control.
+        **Security Note:** For security, API keys should be set as environment variables,
+        not stored in config files. On Streamlit Cloud, use the Secrets management feature.
     """)
 
 # ============================================================================
