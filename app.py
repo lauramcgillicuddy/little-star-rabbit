@@ -6,6 +6,7 @@ A trauma-aware, kid-safe app for one very special star.
 import streamlit as st
 import json
 import os
+import time as time_module
 from datetime import datetime, time
 from openai import OpenAI
 from pathlib import Path
@@ -32,11 +33,13 @@ def inject_css():
         .stRadio, .stSelectbox, .stTextarea, .stCheckbox, .stButton > button,
         .stTabs [data-baseweb="tab"], label, p, div {
             font-family: "Patrick Hand", "Indie Flower", cursive, sans-serif;
+            font-size: 1.2rem;
         }
 
-        /* Ensure all text is visible */
+        /* Ensure all text is visible and bigger */
         p, span, div, label, .stMarkdown {
             color: #4a1942;
+            font-size: 1.2rem;
         }
 
         /* Use extra cute handwritten for helper text */
@@ -96,7 +99,7 @@ def inject_css():
             font-family: "Covered By Your Grace", "Patrick Hand", cursive;
         }
 
-        /* Big CTA buttons on landing - Extra Cute! */
+        /* Landing page buttons - Cute but not too big! */
         .lsr-cta-row {
             display: flex;
             gap: 1rem;
@@ -105,34 +108,34 @@ def inject_css():
             margin-bottom: 2rem;
         }
         .lsr-cta-main {
-            border-radius: 2rem;
-            padding: 1rem 2.8rem;
-            border: 3px solid #ff69b4;
+            border-radius: 1.5rem;
+            padding: 0.7rem 1.8rem;
+            border: 2px solid #ff69b4;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.4);
+            box-shadow: 0 6px 16px rgba(255, 105, 180, 0.3);
             background: linear-gradient(135deg, #ff85c0, #ffb6d9);
             color: #fff;
             transition: transform 0.2s ease;
         }
         .lsr-cta-main:hover {
-            transform: scale(1.05) rotate(-1deg);
+            transform: scale(1.03) rotate(-1deg);
         }
         .lsr-cta-secondary {
-            border-radius: 2rem;
-            padding: 1rem 2.8rem;
-            border: 3px solid #ffb6d9;
+            border-radius: 1.5rem;
+            padding: 0.7rem 1.8rem;
+            border: 2px solid #ffb6d9;
             background: #fff;
             font-weight: 500;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             cursor: pointer;
             color: #c2185b;
-            box-shadow: 0 6px 16px rgba(255, 182, 193, 0.3);
+            box-shadow: 0 5px 12px rgba(255, 182, 193, 0.25);
             transition: transform 0.2s ease;
         }
         .lsr-cta-secondary:hover {
-            transform: scale(1.05) rotate(1deg);
+            transform: scale(1.03) rotate(1deg);
         }
 
         /* Tabs - Cute and Pink! */
@@ -236,29 +239,30 @@ def inject_css():
             font-size: 1.1rem;
         }
 
-        /* Regular buttons (non-card) - Cute and Pink! */
+        /* Regular buttons (non-card) - Cute and not too big! */
         .stButton > button[kind="primary"] {
             background: linear-gradient(135deg, #ff85c0, #ffb6d9);
             color: white;
             border: none;
-            border-radius: 2rem;
-            font-size: 1.05rem;
+            border-radius: 1.5rem;
+            font-size: 1rem;
+            padding: 0.6rem 1.4rem;
         }
 
         .stButton > button:not([data-testid]) {
-            border-radius: 2rem;
+            border-radius: 1.5rem;
             font-weight: 500;
-            padding: 0.8rem 1.8rem;
+            padding: 0.6rem 1.4rem;
             border: 2px solid #ffb6d9;
             transition: all 0.2s ease;
             color: #4a1942 !important;
             background-color: #ffffff;
-            font-size: 1.05rem;
+            font-size: 1rem;
         }
 
         .stButton > button:not([data-testid]):hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.4);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.35);
             border-color: #ff85c0;
         }
 
@@ -1052,35 +1056,110 @@ def show_calm_burrow():
     elif st.session_state.get("calm_activity") == "timer":
         st.markdown("---")
 
-        timer_minutes = settings.get("session_length_minutes", 10)
+        timer_minutes = settings.get("session_length_minutes", 5)
 
-        st.markdown(f"""
-            <div style='
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                padding: 3rem 2rem;
-                border-radius: 15px;
-                text-align: center;
-            '>
-                <h2>⏲ Calm Timer</h2>
-                <p style='font-size: 1.3rem; margin: 2rem 0;'>
-                    We're in the burrow for {timer_minutes} minutes of quiet time.
-                </p>
-                <p style='font-size: 3rem; margin: 2rem 0;'>🐇✨</p>
-                <p>
-                    Just rest, breathe, and be calm.<br>
-                    Little Star Rabbit is resting with you.
-                </p>
-            </div>
-        """, unsafe_allow_html=True)
+        # Check if timer is running
+        if not st.session_state.get("timer_running"):
+            # Show start screen
+            st.markdown(f"""
+                <div style='
+                    background: linear-gradient(135deg, #ff85c0 0%, #ffb6d9 100%);
+                    color: white;
+                    padding: 3rem 2rem;
+                    border-radius: 2rem;
+                    text-align: center;
+                    border: 3px solid #ff69b4;
+                    box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+                '>
+                    <h2>⏲ Calm Timer</h2>
+                    <p style='font-size: 1.5rem; margin: 2rem 0;'>
+                        Ready for {timer_minutes} minutes of quiet time?
+                    </p>
+                    <p style='font-size: 3rem; margin: 2rem 0;'>🐇✨</p>
+                    <p style='font-size: 1.2rem;'>
+                        Just rest, breathe, and be calm.<br>
+                        Little Star Rabbit will rest with you.
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
 
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.info(f"💡 Set a timer for {timer_minutes} minutes on another device, or just take a quiet rest!")
+            st.markdown("<br>", unsafe_allow_html=True)
 
-        if st.button("I'm done resting", key="done_resting", use_container_width=True):
-            del st.session_state["calm_activity"]
-            st.session_state["child_page"] = "home"
-            st.rerun()
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("🌟 Start Timer", key="start_timer", use_container_width=True, type="primary"):
+                    st.session_state["timer_running"] = True
+                    st.rerun()
+            with col2:
+                if st.button("← Back", key="back_from_timer_start", use_container_width=True):
+                    del st.session_state["calm_activity"]
+                    st.rerun()
+        else:
+            # Run the countdown
+            total_seconds = timer_minutes * 60
+            placeholder = st.empty()
+            start_time = time_module.time()
+
+            st.markdown("""
+                <div style='text-align: center; margin-bottom: 2rem;'>
+                    <h2 style='color: #d5006d;'>🐇 Calm Burrow Time 🐇</h2>
+                    <p style='font-size: 1.2rem; color: #c2185b;'>Little Star Rabbit is resting with you...</p>
+                </div>
+            """, unsafe_allow_html=True)
+
+            while True:
+                elapsed = int(time_module.time() - start_time)
+                remaining = total_seconds - elapsed
+
+                if remaining <= 0:
+                    break
+
+                mins, secs = divmod(remaining, 60)
+                placeholder.markdown(f"""
+                    <div style='
+                        background: linear-gradient(135deg, #ff85c0 0%, #ffb6d9 100%);
+                        color: white;
+                        padding: 4rem 2rem;
+                        border-radius: 2rem;
+                        text-align: center;
+                        font-size: 4rem;
+                        font-weight: 700;
+                        margin: 2rem 0;
+                        border: 3px solid #ff69b4;
+                        box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4);
+                    '>
+                        {mins:02d}:{secs:02d}
+                    </div>
+                """, unsafe_allow_html=True)
+                time_module.sleep(1)
+
+            # Timer finished!
+            placeholder.markdown("""
+                <div style='
+                    background: linear-gradient(135deg, #ff85c0 0%, #ffb6d9 100%);
+                    color: white;
+                    padding: 3rem 2rem;
+                    border-radius: 2rem;
+                    text-align: center;
+                    border: 3px solid #ff69b4;
+                    box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4);
+                '>
+                    <h2>✨ Time is up! ✨</h2>
+                    <p style='font-size: 2rem; margin: 2rem 0;'>🐇💖</p>
+                    <p style='font-size: 1.3rem;'>
+                        Little Star Rabbit is done resting with you.<br>
+                        Well done taking quiet time!
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
+
+            st.markdown("<br>", unsafe_allow_html=True)
+
+            if st.button("All done! 🌟", key="done_resting", use_container_width=True, type="primary"):
+                del st.session_state["calm_activity"]
+                del st.session_state["timer_running"]
+                st.session_state["child_page"] = "home"
+                st.rerun()
 
 # ============================================================================
 # ADMIN MODE
