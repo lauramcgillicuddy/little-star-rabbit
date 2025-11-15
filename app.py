@@ -323,7 +323,14 @@ def scroll_to_top():
     components.html(
         """
         <script>
-            window.parent.document.querySelector('section.main').scrollTo(0, 0);
+            setTimeout(function() {
+                const mainSection = window.parent.document.querySelector('section.main');
+                if (mainSection) {
+                    mainSection.scrollTo({top: 0, behavior: 'smooth'});
+                }
+                // Also try scrolling the whole window
+                window.parent.scrollTo({top: 0, behavior: 'smooth'});
+            }, 100);
         </script>
         """,
         height=0,
