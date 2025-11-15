@@ -33,28 +33,66 @@ def inject_css():
         .stRadio, .stSelectbox, .stTextarea, .stCheckbox, .stButton > button,
         .stTabs [data-baseweb="tab"], label, p, div {
             font-family: "Patrick Hand", "Indie Flower", cursive, sans-serif;
-            font-size: 1.2rem;
+            font-size: 1.45rem;
         }
 
         /* Ensure all text is visible and bigger */
         p, span, div, label, .stMarkdown {
             color: #4a1942;
-            font-size: 1.2rem;
+            font-size: 1.45rem;
         }
 
         /* Use extra cute handwritten for helper text */
         .lsr-note {
             font-family: "Covered By Your Grace", "Patrick Hand", cursive;
-            font-size: 1.1rem;
+            font-size: 1.35rem;
         }
 
-        /* Background + layout - Super Pink and Magical! */
+        /* Background + layout - Super Pink and Magical with Stars! */
         .stApp {
             background:
+                /* Translucent white stars */
+                radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.6) 0, rgba(255, 255, 255, 0.6) 2px, transparent 2px),
+                radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.5) 0, rgba(255, 255, 255, 0.5) 3px, transparent 3px),
+                radial-gradient(circle at 45% 35%, rgba(255, 255, 255, 0.4) 0, rgba(255, 255, 255, 0.4) 2px, transparent 2px),
+                radial-gradient(circle at 65% 60%, rgba(255, 255, 255, 0.5) 0, rgba(255, 255, 255, 0.5) 2.5px, transparent 2.5px),
+                radial-gradient(circle at 25% 75%, rgba(255, 255, 255, 0.4) 0, rgba(255, 255, 255, 0.4) 2px, transparent 2px),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.6) 0, rgba(255, 255, 255, 0.6) 2px, transparent 2px),
+                radial-gradient(circle at 10% 50%, rgba(255, 255, 255, 0.3) 0, rgba(255, 255, 255, 0.3) 2px, transparent 2px),
+                radial-gradient(circle at 75% 40%, rgba(255, 255, 255, 0.5) 0, rgba(255, 255, 255, 0.5) 2px, transparent 2px),
+                /* Pink glows */
                 radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
                 radial-gradient(circle at 80% 70%, rgba(255, 192, 203, 0.3) 0%, transparent 50%),
+                /* Base gradient */
                 linear-gradient(180deg, #ffb6d9 0%, #ffd4e5 30%, #ffe5f0 60%, #fff0f5 100%);
             color: #4a1942;
+            position: relative;
+        }
+
+        /* Add cute doodle hearts */
+        .stApp::before {
+            content: "💕";
+            position: fixed;
+            top: 10%;
+            right: 5%;
+            font-size: 2rem;
+            opacity: 0.15;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .stApp::after {
+            content: "✨";
+            position: fixed;
+            bottom: 15%;
+            left: 8%;
+            font-size: 1.8rem;
+            opacity: 0.15;
+            animation: float 5s ease-in-out infinite 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
         .block-container {
             padding-top: 3rem;
@@ -73,19 +111,19 @@ def inject_css():
             text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.4);
         }
         h1 {
-            font-size: 2.8rem;
+            font-size: 3.05rem;
             font-weight: 700;
         }
         h2 {
-            font-size: 2.2rem;
+            font-size: 2.45rem;
             font-weight: 700;
         }
         h3 {
-            font-size: 1.8rem;
+            font-size: 2.05rem;
             font-weight: 600;
         }
         .lsr-hero-title {
-            font-size: 3.5rem;
+            font-size: 3.75rem;
             font-weight: 700;
             text-align: center;
             margin-bottom: 0.5rem;
@@ -93,7 +131,7 @@ def inject_css():
         }
         .lsr-hero-subtitle {
             text-align: center;
-            font-size: 1.3rem;
+            font-size: 1.55rem;
             color: #c2185b !important;
             margin-bottom: 2.2rem;
             font-family: "Covered By Your Grace", "Patrick Hand", cursive;
@@ -112,7 +150,7 @@ def inject_css():
             padding: 0.7rem 1.8rem;
             border: 2px solid #ff69b4;
             font-weight: 600;
-            font-size: 1.05rem;
+            font-size: 1.3rem;
             cursor: pointer;
             box-shadow: 0 6px 16px rgba(255, 105, 180, 0.3);
             background: linear-gradient(135deg, #ff85c0, #ffb6d9);
@@ -128,7 +166,7 @@ def inject_css():
             border: 2px solid #ffb6d9;
             background: #fff;
             font-weight: 500;
-            font-size: 1.05rem;
+            font-size: 1.3rem;
             cursor: pointer;
             color: #c2185b;
             box-shadow: 0 5px 12px rgba(255, 182, 193, 0.25);
@@ -140,7 +178,7 @@ def inject_css():
 
         /* Tabs - Cute and Pink! */
         .stTabs [data-baseweb="tab"] {
-            font-size: 1.1rem;
+            font-size: 1.35rem;
             font-weight: 600;
             padding: 0.8rem 1.2rem;
             border-radius: 1rem 1rem 0 0;
@@ -167,7 +205,7 @@ def inject_css():
             height: auto;
             min-height: 180px;
             color: #4a1942 !important;
-            font-size: 1.1rem;
+            font-size: 1.35rem;
         }
         div[data-testid="stButton"] > button:hover {
             transform: translateY(-6px) rotate(-1deg);
@@ -176,19 +214,19 @@ def inject_css():
         }
 
         .lsr-card-icon {
-            font-size: 3rem;
+            font-size: 3.25rem;
             margin-bottom: 1rem;
             display: block;
         }
         .lsr-card-title {
-            font-size: 1.4rem;
+            font-size: 1.65rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
             display: block;
             color: #d5006d;
         }
         .lsr-card-sub {
-            font-size: 1.05rem;
+            font-size: 1.3rem;
             color: #c2185b;
             font-family: "Covered By Your Grace", "Patrick Hand", cursive;
             display: block;
@@ -203,7 +241,7 @@ def inject_css():
             border: 3px solid #ffb6d9;
             box-shadow: 0 10px 25px rgba(255, 105, 180, 0.3);
             line-height: 1.8;
-            font-size: 1.15rem;
+            font-size: 1.4rem;
         }
 
         /* Fact box - Sparkly! */
@@ -214,7 +252,7 @@ def inject_css():
             border: 3px solid #ffd700;
             box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
             line-height: 1.8;
-            font-size: 1.15rem;
+            font-size: 1.4rem;
         }
 
         /* Feeling boxes - Extra Pink! */
@@ -225,7 +263,7 @@ def inject_css():
             border: 3px solid #ff85c0;
             box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
             margin-bottom: 1.5rem;
-            font-size: 1.15rem;
+            font-size: 1.4rem;
         }
 
         .lsr-info-box {
@@ -236,7 +274,7 @@ def inject_css():
             margin: 1rem 0;
             color: #c2185b;
             text-align: center;
-            font-size: 1.1rem;
+            font-size: 1.35rem;
         }
 
         /* Regular buttons (non-card) - Cute and not too big! */
@@ -245,7 +283,7 @@ def inject_css():
             color: white;
             border: none;
             border-radius: 1.5rem;
-            font-size: 1rem;
+            font-size: 1.25rem;
             padding: 0.6rem 1.4rem;
         }
 
@@ -257,7 +295,7 @@ def inject_css():
             transition: all 0.2s ease;
             color: #4a1942 !important;
             background-color: #ffffff;
-            font-size: 1rem;
+            font-size: 1.25rem;
         }
 
         .stButton > button:not([data-testid]):hover {
@@ -977,6 +1015,18 @@ def show_calm_burrow():
             st.session_state["calm_activity"] = "timer"
 
     if st.session_state.get("calm_activity") == "breaths":
+        st.markdown("<div id='breaths-section'></div>", unsafe_allow_html=True)
+        # Auto-scroll to breaths section
+        st.markdown("""
+            <script>
+                setTimeout(function() {
+                    const section = document.getElementById('breaths-section');
+                    if (section) {
+                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 100);
+            </script>
+        """, unsafe_allow_html=True)
         st.markdown("---")
         st.markdown("""
             <div style='
@@ -1008,6 +1058,18 @@ def show_calm_burrow():
             st.rerun()
 
     elif st.session_state.get("calm_activity") == "countdown":
+        st.markdown("<div id='countdown-section'></div>", unsafe_allow_html=True)
+        # Auto-scroll to countdown section
+        st.markdown("""
+            <script>
+                setTimeout(function() {
+                    const section = document.getElementById('countdown-section');
+                    if (section) {
+                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 100);
+            </script>
+        """, unsafe_allow_html=True)
         st.markdown("---")
         st.markdown("""
             <div style='
@@ -1054,12 +1116,31 @@ def show_calm_burrow():
             st.rerun()
 
     elif st.session_state.get("calm_activity") == "timer":
+        st.markdown("<div id='timer-section'></div>", unsafe_allow_html=True)
+        # Auto-scroll to timer section
+        st.markdown("""
+            <script>
+                setTimeout(function() {
+                    const timerSection = document.getElementById('timer-section');
+                    if (timerSection) {
+                        timerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }, 100);
+            </script>
+        """, unsafe_allow_html=True)
         st.markdown("---")
 
         timer_minutes = settings.get("session_length_minutes", 5)
+        total_seconds = timer_minutes * 60
+
+        # Initialize timer state if needed
+        if "timer_start_time" not in st.session_state:
+            st.session_state["timer_start_time"] = None
+        if "timer_paused_at" not in st.session_state:
+            st.session_state["timer_paused_at"] = None
 
         # Check if timer is running
-        if not st.session_state.get("timer_running"):
+        if st.session_state["timer_start_time"] is None:
             # Show start screen
             st.markdown(f"""
                 <div style='
@@ -1088,34 +1169,35 @@ def show_calm_burrow():
             col1, col2 = st.columns(2)
             with col1:
                 if st.button("🌟 Start Timer", key="start_timer", use_container_width=True, type="primary"):
+                    st.session_state["timer_start_time"] = time_module.time()
                     st.session_state["timer_running"] = True
                     st.rerun()
             with col2:
                 if st.button("← Back", key="back_from_timer_start", use_container_width=True):
                     del st.session_state["calm_activity"]
+                    st.session_state["timer_start_time"] = None
+                    st.session_state["timer_paused_at"] = None
                     st.rerun()
         else:
-            # Run the countdown
-            total_seconds = timer_minutes * 60
-            placeholder = st.empty()
-            start_time = time_module.time()
+            # Calculate elapsed and remaining time
+            if st.session_state.get("timer_paused_at"):
+                elapsed = st.session_state["timer_paused_at"]
+            else:
+                elapsed = int(time_module.time() - st.session_state["timer_start_time"])
 
-            st.markdown("""
-                <div style='text-align: center; margin-bottom: 2rem;'>
-                    <h2 style='color: #d5006d;'>🐇 Calm Burrow Time 🐇</h2>
-                    <p style='font-size: 1.2rem; color: #c2185b;'>Little Star Rabbit is resting with you...</p>
-                </div>
-            """, unsafe_allow_html=True)
+            remaining = max(0, total_seconds - elapsed)
 
-            while True:
-                elapsed = int(time_module.time() - start_time)
-                remaining = total_seconds - elapsed
-
-                if remaining <= 0:
-                    break
+            if remaining > 0 and not st.session_state.get("timer_paused_at"):
+                # Timer is active - show countdown
+                st.markdown("""
+                    <div style='text-align: center; margin-bottom: 2rem;'>
+                        <h2 style='color: #d5006d;'>🐇 Calm Burrow Time 🐇</h2>
+                        <p style='font-size: 1.4rem; color: #c2185b;'>Little Star Rabbit is resting with you...</p>
+                    </div>
+                """, unsafe_allow_html=True)
 
                 mins, secs = divmod(remaining, 60)
-                placeholder.markdown(f"""
+                st.markdown(f"""
                     <div style='
                         background: linear-gradient(135deg, #ff85c0 0%, #ffb6d9 100%);
                         color: white;
@@ -1131,35 +1213,99 @@ def show_calm_burrow():
                         {mins:02d}:{secs:02d}
                     </div>
                 """, unsafe_allow_html=True)
+
+                st.markdown("<br>", unsafe_allow_html=True)
+
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("⏸ Stop Timer", key="stop_timer", use_container_width=True):
+                        st.session_state["timer_paused_at"] = elapsed
+                        st.rerun()
+                with col2:
+                    if st.button("🏠 Go Home", key="cancel_timer", use_container_width=True):
+                        del st.session_state["calm_activity"]
+                        st.session_state["timer_start_time"] = None
+                        st.session_state["timer_paused_at"] = None
+                        st.session_state["child_page"] = "home"
+                        st.rerun()
+
+                # Auto-refresh every second
                 time_module.sleep(1)
-
-            # Timer finished!
-            placeholder.markdown("""
-                <div style='
-                    background: linear-gradient(135deg, #ff85c0 0%, #ffb6d9 100%);
-                    color: white;
-                    padding: 3rem 2rem;
-                    border-radius: 2rem;
-                    text-align: center;
-                    border: 3px solid #ff69b4;
-                    box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4);
-                '>
-                    <h2>✨ Time is up! ✨</h2>
-                    <p style='font-size: 2rem; margin: 2rem 0;'>🐇💖</p>
-                    <p style='font-size: 1.3rem;'>
-                        Little Star Rabbit is done resting with you.<br>
-                        Well done taking quiet time!
-                    </p>
-                </div>
-            """, unsafe_allow_html=True)
-
-            st.markdown("<br>", unsafe_allow_html=True)
-
-            if st.button("All done! 🌟", key="done_resting", use_container_width=True, type="primary"):
-                del st.session_state["calm_activity"]
-                del st.session_state["timer_running"]
-                st.session_state["child_page"] = "home"
                 st.rerun()
+
+            elif st.session_state.get("timer_paused_at"):
+                # Timer is paused
+                st.markdown("""
+                    <div style='text-align: center; margin-bottom: 2rem;'>
+                        <h2 style='color: #d5006d;'>⏸ Timer Stopped</h2>
+                        <p style='font-size: 1.4rem; color: #c2185b;'>Take your time!</p>
+                    </div>
+                """, unsafe_allow_html=True)
+
+                mins, secs = divmod(remaining, 60)
+                st.markdown(f"""
+                    <div style='
+                        background: linear-gradient(135deg, #ffd4e5 0%, #ffe5f0 100%);
+                        color: #d5006d;
+                        padding: 4rem 2rem;
+                        border-radius: 2rem;
+                        text-align: center;
+                        font-size: 4rem;
+                        font-weight: 700;
+                        margin: 2rem 0;
+                        border: 3px solid #ffb6d9;
+                        box-shadow: 0 10px 30px rgba(255, 182, 193, 0.3);
+                    '>
+                        {mins:02d}:{secs:02d}
+                    </div>
+                """, unsafe_allow_html=True)
+
+                st.markdown("<br>", unsafe_allow_html=True)
+
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("▶️ Resume Timer", key="resume_timer", use_container_width=True, type="primary"):
+                        # Resume by adjusting start time
+                        st.session_state["timer_start_time"] = time_module.time() - st.session_state["timer_paused_at"]
+                        st.session_state["timer_paused_at"] = None
+                        st.rerun()
+                with col2:
+                    if st.button("🏠 Go Home", key="cancel_paused_timer", use_container_width=True):
+                        del st.session_state["calm_activity"]
+                        st.session_state["timer_start_time"] = None
+                        st.session_state["timer_paused_at"] = None
+                        st.session_state["child_page"] = "home"
+                        st.rerun()
+
+            else:
+                # Timer finished!
+                st.markdown("""
+                    <div style='
+                        background: linear-gradient(135deg, #ff85c0 0%, #ffb6d9 100%);
+                        color: white;
+                        padding: 3rem 2rem;
+                        border-radius: 2rem;
+                        text-align: center;
+                        border: 3px solid #ff69b4;
+                        box-shadow: 0 10px 30px rgba(255, 105, 180, 0.4);
+                    '>
+                        <h2>✨ Time is up! ✨</h2>
+                        <p style='font-size: 2rem; margin: 2rem 0;'>🐇💖</p>
+                        <p style='font-size: 1.3rem;'>
+                            Little Star Rabbit is done resting with you.<br>
+                            Well done taking quiet time!
+                        </p>
+                    </div>
+                """, unsafe_allow_html=True)
+
+                st.markdown("<br>", unsafe_allow_html=True)
+
+                if st.button("All done! 🌟", key="done_resting", use_container_width=True, type="primary"):
+                    del st.session_state["calm_activity"]
+                    st.session_state["timer_start_time"] = None
+                    st.session_state["timer_paused_at"] = None
+                    st.session_state["child_page"] = "home"
+                    st.rerun()
 
 # ============================================================================
 # ADMIN MODE
