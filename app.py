@@ -15,7 +15,7 @@ st.set_page_config(
     page_title="Little Star Rabbit",
     page_icon="🌟",
     layout="centered",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 # Custom CSS styling
@@ -1112,6 +1112,8 @@ def show_admin_profile():
     """Admin: Child profile settings"""
     st.title("👤 Child Profile")
     st.markdown("Customize the app for your child")
+
+    st.info("👈 Use the sidebar on the left to navigate to Content Settings, Time & Limits, and other sections!")
 
     st.markdown("---")
 
