@@ -209,6 +209,71 @@ The app will open in your browser at `http://localhost:8501`
 
 **Note:** Your API key and all settings are stored locally in the `data/` folder. This folder is gitignored for security.
 
+---
+
+## ☁️ Deploying to Streamlit Cloud (Recommended)
+
+Want to access the app from anywhere? Deploy it for free to Streamlit Community Cloud!
+
+**1. Push your code to GitHub:**
+
+Your code is already in this GitHub repository. Make sure all changes are committed and pushed.
+
+**2. Go to Streamlit Community Cloud:**
+
+- Visit [share.streamlit.io](https://share.streamlit.io)
+- Sign in with your GitHub account
+- Click "New app"
+
+**3. Configure your app:**
+
+- **Repository:** `lauramcgillicuddy/little-star-rabbit`
+- **Branch:** `main` (or your preferred branch)
+- **Main file path:** `app.py`
+
+**4. Set up secrets:**
+
+Before deploying, you MUST configure your secrets:
+
+- Click "Advanced settings"
+- In the "Secrets" section, paste the following (with your actual values):
+
+```toml
+# OpenAI API Configuration
+[openai]
+api_key = "sk-your-actual-openai-api-key-here"
+
+# Admin Settings
+[admin]
+pin = "your-secure-pin-here"  # CHANGE THIS!
+
+# Child Profile (optional - can also configure in the app)
+[profile]
+child_name = "Aoibheann"
+age = 7
+pronouns = "she/her"
+interests = "space,animals,stars,ducks"
+```
+
+**5. Deploy!**
+
+- Click "Deploy"
+- Wait a few minutes for your app to build
+- You'll get a URL like `https://your-app-name.streamlit.app`
+- Bookmark it and share with family!
+
+**Important Notes for Cloud Deployment:**
+
+- Secrets are REQUIRED on Streamlit Cloud (API key and PIN)
+- Any settings you change in the Grown-ups' Corner will be saved to the cloud instance
+- The `data/` folder persists between sessions on the same cloud instance
+- If you redeploy the app, your `data/` folder may be reset, so keep backups of important customizations
+- You can update secrets anytime from the Streamlit Cloud dashboard
+
+**Privacy Note:** When deployed to Streamlit Cloud, your data is stored on Streamlit's servers. For maximum privacy, consider running locally instead.
+
+---
+
 🌸 Customisation
 
 All affirmations, lessons, themes, word filters, and story settings can be customized via:

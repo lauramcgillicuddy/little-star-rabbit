@@ -163,6 +163,33 @@ settings = load_json(SETTINGS_FILE, DEFAULT_SETTINGS)
 affirmations = load_json(AFFIRMATIONS_FILE, DEFAULT_AFFIRMATIONS)
 lessons = load_json(LESSONS_FILE, DEFAULT_LESSONS)
 
+# Override with Streamlit secrets if available (for Streamlit Cloud deployment)
+try:
+    if hasattr(st, 'secrets'):
+        # Override API key if set in secrets
+        if 'openai' in st.secrets and 'api_key' in st.secrets['openai']:
+            settings['api_key'] = st.secrets['openai']['api_key']
+
+        # Override admin PIN if set in secrets
+        if 'admin' in st.secrets and 'pin' in st.secrets['admin']:
+            settings['admin_pin'] = st.secrets['admin']['pin']
+
+        # Override profile if set in secrets
+        if 'profile' in st.secrets:
+            if 'child_name' in st.secrets['profile']:
+                profile['child_name'] = st.secrets['profile']['child_name']
+            if 'age' in st.secrets['profile']:
+                profile['age'] = st.secrets['profile']['age']
+            if 'pronouns' in st.secrets['profile']:
+                profile['pronouns'] = st.secrets['profile']['pronouns']
+            if 'interests' in st.secrets['profile']:
+                # Convert comma-separated string to list
+                interests_str = st.secrets['profile']['interests']
+                profile['interests'] = [i.strip() for i in interests_str.split(',')]
+except Exception:
+    # Secrets not available (local development) - use JSON files only
+    pass
+
 def save_profile():
     save_json(PROFILE_FILE, profile)
 
