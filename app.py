@@ -630,59 +630,34 @@ def show_child_home():
     st.markdown(f"<h1 style='text-align:center;'>Hello, {profile['child_name']}! 🌟</h1>", unsafe_allow_html=True)
     st.markdown("<p class='lsr-note' style='text-align:center;'>What would you like to do today?</p>", unsafe_allow_html=True)
 
-    # HTML template for card content
-    card_html = """
-    <div class='lsr-card-icon'>{icon}</div>
-    <div class='lsr-card-title'>{title}</div>
-    <div class='lsr-card-sub'>{subtitle}</div>
-    """
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    # Activity cards - entire card is clickable
+    # Activity cards - each card is a clickable button with emoji text
     col1, col2 = st.columns(2, gap="large")
     with col1:
-        if st.button(
-            card_html.format(icon="🌙", title="Storytime", subtitle="Snuggle in for a cozy story"),
-            key="card_storytime",
-            use_container_width=True
-        ):
+        if st.button("🌙\n\nStorytime\n\nSnuggle in for a cozy story", key="card_storytime", use_container_width=True):
             st.session_state["child_page"] = "storytime"
             st.rerun()
 
     with col2:
-        if st.button(
-            card_html.format(icon="✨", title="Star Facts", subtitle="Let's learn something cool together"),
-            key="card_facts",
-            use_container_width=True
-        ):
+        if st.button("✨\n\nStar Facts\n\nLet's learn something cool together", key="card_facts", use_container_width=True):
             st.session_state["child_page"] = "facts"
             st.rerun()
 
     col3, col4 = st.columns(2, gap="large")
     with col3:
-        if st.button(
-            card_html.format(icon="💖", title="Feelings & Stars", subtitle="How's your little star-heart today?"),
-            key="card_feelings",
-            use_container_width=True
-        ):
+        if st.button("💖\n\nFeelings & Stars\n\nHow's your little star-heart today?", key="card_feelings", use_container_width=True):
             st.session_state["child_page"] = "feelings"
             st.rerun()
 
     with col4:
-        if st.button(
-            card_html.format(icon="🧠", title="Little Lessons", subtitle="Tiny ideas for your big brain"),
-            key="card_lessons",
-            use_container_width=True
-        ):
+        if st.button("🧠\n\nLittle Lessons\n\nTiny ideas for your big brain", key="card_lessons", use_container_width=True):
             st.session_state["child_page"] = "lessons"
             st.rerun()
 
     col5, col6 = st.columns(2, gap="large")
     with col5:
-        if st.button(
-            card_html.format(icon="🐚", title="Calm Burrow", subtitle="Soft, quiet time in the bunny burrow"),
-            key="card_calm",
-            use_container_width=True
-        ):
+        if st.button("🐚\n\nCalm Burrow\n\nSoft, quiet time in the bunny burrow", key="card_calm", use_container_width=True):
             st.session_state["child_page"] = "calm"
             st.rerun()
 
