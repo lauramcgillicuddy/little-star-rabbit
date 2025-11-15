@@ -4,6 +4,7 @@ A trauma-aware, kid-safe app for one very special star.
 """
 
 import streamlit as st
+import streamlit.components.v1 as components
 import json
 import os
 import time as time_module
@@ -298,6 +299,18 @@ def inject_css():
         </style>
         """,
         unsafe_allow_html=True,
+    )
+
+# Scroll helper function
+def scroll_to_top():
+    """Scroll the page to top using JavaScript component"""
+    components.html(
+        """
+        <script>
+            window.parent.document.querySelector('section.main').scrollTo(0, 0);
+        </script>
+        """,
+        height=0,
     )
 
 # Data directory setup
@@ -977,18 +990,8 @@ def show_calm_burrow():
             st.session_state["calm_activity"] = "timer"
 
     if st.session_state.get("calm_activity") == "breaths":
-        st.markdown("<div id='breaths-section'></div>", unsafe_allow_html=True)
-        # Auto-scroll to breaths section
-        st.markdown("""
-            <script>
-                setTimeout(function() {
-                    const section = document.getElementById('breaths-section');
-                    if (section) {
-                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                }, 100);
-            </script>
-        """, unsafe_allow_html=True)
+        # Scroll to activity content
+        scroll_to_top()
         st.markdown("---")
         st.markdown("""
             <div style='
@@ -1020,18 +1023,8 @@ def show_calm_burrow():
             st.rerun()
 
     elif st.session_state.get("calm_activity") == "countdown":
-        st.markdown("<div id='countdown-section'></div>", unsafe_allow_html=True)
-        # Auto-scroll to countdown section
-        st.markdown("""
-            <script>
-                setTimeout(function() {
-                    const section = document.getElementById('countdown-section');
-                    if (section) {
-                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                }, 100);
-            </script>
-        """, unsafe_allow_html=True)
+        # Scroll to activity content
+        scroll_to_top()
         st.markdown("---")
         st.markdown("""
             <div style='
@@ -1078,18 +1071,8 @@ def show_calm_burrow():
             st.rerun()
 
     elif st.session_state.get("calm_activity") == "timer":
-        st.markdown("<div id='timer-section'></div>", unsafe_allow_html=True)
-        # Auto-scroll to timer section
-        st.markdown("""
-            <script>
-                setTimeout(function() {
-                    const timerSection = document.getElementById('timer-section');
-                    if (timerSection) {
-                        timerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                }, 100);
-            </script>
-        """, unsafe_allow_html=True)
+        # Scroll to activity content
+        scroll_to_top()
         st.markdown("---")
 
         timer_minutes = settings.get("session_length_minutes", 5)
