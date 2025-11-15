@@ -20,13 +20,18 @@ st.set_page_config(
 
 # Custom CSS styling
 def inject_css():
-    """Inject custom CSS for beautiful starry theme"""
+    """Inject custom CSS for beautiful strawberry milkshake theme"""
     st.markdown(
         """
         <style>
+        /* --- IMPORT FONTS --- */
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Patrick+Hand&display=swap');
+
         /* --- GENERAL LAYOUT --- */
         .stApp {
-            background: radial-gradient(circle at top, #fef6ff 0%, #f7f4ff 40%, #f0f4ff 100%);
+            background: radial-gradient(circle at top, #ffeef7 0%, #fff4ea 40%, #ffe9f2 100%);
+            font-family: "Baloo 2", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #2B102A;
         }
 
         .block-container {
@@ -35,25 +40,36 @@ def inject_css():
             max-width: 900px;
         }
 
-        /* Hide Streamlit default stuff (optional) */
         #MainMenu, footer {visibility: hidden;}
         header {visibility: hidden;}
 
         /* --- TITLES --- */
+        .lsr-hero-title, h1, h2, h3 {
+            font-family: "Baloo 2", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            letter-spacing: 0.03em;
+        }
+
         .lsr-hero-title {
             font-size: 3rem;
-            font-weight: 800;
+            font-weight: 700;
             text-align: center;
             margin-bottom: 0.3rem;
         }
+
         .lsr-hero-subtitle {
             text-align: center;
             font-size: 1rem;
-            color: #6b5878;
-            margin-bottom: 2.5rem;
+            color: #8a5574;
+            margin-bottom: 2.2rem;
         }
 
-        /* --- BIG CTA BUTTONS (landing) --- */
+        /* Handwritten little bits */
+        .lsr-note, .lsr-small {
+            font-family: "Patrick Hand", "Baloo 2", system-ui, sans-serif;
+            font-size: 0.95rem;
+        }
+
+        /* --- BIG CTA BUTTONS --- */
         .lsr-cta-row {
             display: flex;
             gap: 1rem;
@@ -63,41 +79,41 @@ def inject_css():
         }
         .lsr-cta {
             border-radius: 999px;
-            padding: 0.85rem 2.4rem;
+            padding: 0.9rem 2.6rem;
             border: none;
             font-weight: 600;
             font-size: 0.95rem;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(90, 62, 180, 0.25);
-            background: linear-gradient(90deg, #a855f7, #6366f1);
-            color: white;
+            box-shadow: 0 12px 26px rgba(242, 125, 144, 0.4);
+            background: linear-gradient(90deg, #f9739a, #f27d90);
+            color: #fffdf8;
         }
         .lsr-cta-secondary {
             border-radius: 999px;
-            padding: 0.85rem 2.4rem;
-            border: 1px solid #e2d5ff;
-            background: white;
+            padding: 0.9rem 2.6rem;
+            border: 1px solid #ffd0e1;
+            background: #fffdfb;
             font-weight: 500;
             font-size: 0.95rem;
             cursor: pointer;
-            color: #33213c;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.04);
+            color: #4a2037;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
         }
 
         /* --- CHILD HUB CARDS --- */
         .lsr-card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
             gap: 1.5rem;
             margin-top: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .lsr-card {
-            border-radius: 1.5rem;
+            border-radius: 1.6rem;
             padding: 1.6rem 1.4rem;
-            background: linear-gradient(145deg, #ffffff, #e8f0ff);
-            box-shadow: 0 18px 40px rgba(123, 97, 255, 0.15);
+            background: linear-gradient(145deg, #ffffff, #ffe9f4);
+            box-shadow: 0 18px 40px rgba(242, 125, 144, 0.35);
             text-align: left;
             display: flex;
             flex-direction: column;
@@ -107,7 +123,7 @@ def inject_css():
 
         .lsr-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 22px 50px rgba(123, 97, 255, 0.25);
+            box-shadow: 0 22px 50px rgba(242, 125, 144, 0.45);
         }
 
         .lsr-card-icon {
@@ -115,13 +131,13 @@ def inject_css():
             margin-bottom: 0.6rem;
         }
         .lsr-card-title {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.25rem;
         }
         .lsr-card-sub {
-            font-size: 0.9rem;
-            color: #6b5878;
+            font-size: 0.95rem;
+            color: #8a5574;
             margin-bottom: 1.2rem;
         }
         .lsr-card-button {
@@ -129,21 +145,22 @@ def inject_css():
             border-radius: 999px;
             padding: 0.45rem 1.3rem;
             font-size: 0.85rem;
-            border: 1px solid #d7c7ff;
-            background: #ffffff;
-            color: #4b2a6a;
+            border: 1px solid #ffd0e1;
+            background: #fffdfb;
+            color: #4a2037;
             font-weight: 500;
+            font-family: "Patrick Hand", "Baloo 2", system-ui, sans-serif;
         }
 
         /* --- STORY BOX --- */
         .lsr-story-box {
             border-radius: 1.4rem;
             padding: 1.4rem 1.6rem;
-            background: #ffffff;
-            border: 1px solid #e3ddff;
-            box-shadow: 0 12px 30px rgba(83, 64, 170, 0.12);
-            line-height: 1.6;
-            font-size: 1.0rem;
+            background: #fffdfb;
+            border: 1px solid #ffd9ea;
+            box-shadow: 0 12px 30px rgba(242, 125, 144, 0.35);
+            line-height: 1.7;
+            font-size: 1.02rem;
         }
 
         /* --- FACT BOX --- */
@@ -153,8 +170,8 @@ def inject_css():
             background: linear-gradient(135deg, #fffef9 0%, #fff8e1 100%);
             border: 2px solid #ffd700;
             box-shadow: 0 12px 30px rgba(255, 215, 0, 0.15);
-            line-height: 1.6;
-            font-size: 1.0rem;
+            line-height: 1.7;
+            font-size: 1.02rem;
         }
 
         /* --- FEELING BOXES --- */
@@ -162,8 +179,8 @@ def inject_css():
             border-radius: 1.2rem;
             padding: 1.3rem 1.5rem;
             background: linear-gradient(135deg, #fff0f5 0%, #ffe6f0 100%);
-            border-left: 5px solid #ff69b4;
-            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.1);
+            border-left: 5px solid #f27d90;
+            box-shadow: 0 8px 20px rgba(242, 125, 144, 0.25);
             margin-bottom: 1.5rem;
             font-size: 1.05rem;
         }
@@ -171,8 +188,8 @@ def inject_css():
         .lsr-info-box {
             border-radius: 1.2rem;
             padding: 1rem 1.3rem;
-            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
-            border-left: 4px solid #6366f1;
+            background: linear-gradient(135deg, #fff4ea 0%, #ffe9f2 100%);
+            border-left: 4px solid #f27d90;
             margin: 1rem 0;
             font-style: italic;
             color: #555;
@@ -184,24 +201,24 @@ def inject_css():
             border-radius: 999px;
             font-weight: 500;
             padding: 0.6rem 1.5rem;
-            border: 1px solid #e2d5ff;
+            border: 1px solid #ffd0e1;
             transition: all 0.2s ease;
         }
 
         .stButton > button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
+            box-shadow: 0 8px 20px rgba(242, 125, 144, 0.3);
         }
 
         /* --- STREAMLIT WIDGETS --- */
         .stRadio > label {
             font-weight: 500;
-            color: #4b2a6a;
+            color: #4a2037;
         }
 
         .stTextInput > label, .stNumberInput > label, .stSelectbox > label {
             font-weight: 500;
-            color: #4b2a6a;
+            color: #4a2037;
         }
         </style>
         """,
@@ -588,15 +605,15 @@ def show_child_mode():
 def show_child_home():
     """Child mode home hub with activity cards"""
     st.markdown(f"<h1 style='text-align:center;'>Hello, {profile['child_name']}! 🌟</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center;color:#6b5878;'>What would you like to do today?</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;color:#8a5574;'>What would you like to do today?</p>", unsafe_allow_html=True)
 
     # Activity cards
     activities = [
-        {"name": "Storytime", "emoji": "🌙", "page": "storytime", "desc": "Listen to a cozy story"},
-        {"name": "Star Facts", "emoji": "✨", "page": "facts", "desc": "Learn something amazing"},
-        {"name": "Feelings & Stars", "emoji": "💖", "page": "feelings", "desc": "How are you feeling?"},
-        {"name": "Little Lessons", "emoji": "🧠", "page": "lessons", "desc": "Learn something helpful"},
-        {"name": "Calm Burrow", "emoji": "🐚", "page": "calm", "desc": "Quiet time with the bunny"},
+        {"name": "Storytime", "emoji": "🌙", "page": "storytime", "desc": "Snuggle in for a cozy story"},
+        {"name": "Star Facts", "emoji": "✨", "page": "facts", "desc": "Let's learn something cool together"},
+        {"name": "Feelings & Stars", "emoji": "💖", "page": "feelings", "desc": "How's your little star-heart today?"},
+        {"name": "Little Lessons", "emoji": "🧠", "page": "lessons", "desc": "Tiny ideas for your big brain"},
+        {"name": "Calm Burrow", "emoji": "🐚", "page": "calm", "desc": "Soft, quiet time in the bunny burrow"},
     ]
 
     # Create card grid with buttons
