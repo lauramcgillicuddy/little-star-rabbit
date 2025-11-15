@@ -127,40 +127,29 @@ Preview of system prompts used for child content
 
 🧩 Tech Stack
 
-Streamlit — UI / frontend
+- **Streamlit** — UI / frontend
+- **Python** — app logic
+- **OpenAI API** (optional) — safe content generation
+- **Session State** — navigation + time tracking
+- **JSON** — persistent storage for settings, affirmations, and lessons
 
-Python — app logic
+📁 Project Structure
 
-GPT API (optional) — safe content generation
-
-Session State — navigation + time tracking
-
-YAML / JSON — storing admin content (affirmations, lessons)
-
-📁 Project Structure (suggested)
+```
 little-star-rabbit/
 │
-├── app.py                 # Main Streamlit app
-├── pages/                 # Optional subpages (if not using state routing)
+├── app.py                 # Main Streamlit app (all-in-one)
+├── requirements.txt       # Python dependencies
 │
-├── config/
-│   ├── settings.yaml      # Admin settings (time limits, reading level, etc.)
-│   ├── affirmations.json  # Bank of affirmations
+├── data/                  # Auto-created on first run
+│   ├── profile.json       # Child profile settings
+│   ├── settings.json      # Admin settings & API keys
+│   ├── affirmations.json  # Affirmations by feeling
 │   ├── lessons.json       # Mini-lessons library
-│   └── filters.json       # Banned words / safe themes
-│
-├── utils/
-│   ├── prompts.py         # System prompts for safe GPT usage
-│   ├── generation.py      # GPT wrappers
-│   ├── state.py           # Session state helpers
-│   └── safety.py          # Output filtering
-│
-├── assets/
-│   ├── logo.png
-│   ├── bunny.svg
-│   └── icons/
+│   └── usage.json         # Daily usage tracking
 │
 └── README.md
+```
 
 🛡 Safety Principles
 
@@ -182,37 +171,76 @@ The aim is not diagnosis, but providing a warm, safe digital space where a child
 
 🚀 Installation & Running
 
-Clone the repo:
+**1. Clone the repository:**
 
-git clone https://github.com/yourname/little-star-rabbit.git
+```bash
+git clone https://github.com/lauramcgillicuddy/little-star-rabbit.git
 cd little-star-rabbit
+```
 
+**2. Install dependencies:**
 
-Install dependencies:
-
+```bash
 pip install -r requirements.txt
+```
 
+**3. Run the app:**
 
-Set your GPT API key:
-
-export OPENAI_API_KEY="your-key-here"
-
-
-Run the app:
-
+```bash
 streamlit run app.py
+```
+
+The app will open in your browser at `http://localhost:8501`
+
+**4. First-time setup:**
+
+- Click "Grown-ups' Corner" on the landing page
+- Enter the default PIN: `1234`
+- Go to "Safety & API" settings
+- **IMPORTANT:** Change the default PIN to something secure!
+- Enter your OpenAI API key (get one at https://platform.openai.com/api-keys)
+- Configure other settings as desired
+
+**5. Customize for your child:**
+
+- Go to "Child Profile" and enter your child's name, age, and interests
+- Adjust content settings, time limits, and quiet hours
+- Review and customize affirmations and lessons
+
+**Note:** Your API key and all settings are stored locally in the `data/` folder. This folder is gitignored for security.
 
 🌸 Customisation
 
-All affirmations, lessons, themes, word filters, and story settings can be customised via:
+All affirmations, lessons, themes, word filters, and story settings can be customized via:
 
-The Grown-Ups’ Corner (UI)
+**Option 1: Through the UI (Recommended)**
+- Use the Grown-ups' Corner admin interface
+- All changes are saved automatically to JSON files
+- No coding required!
 
-Editing the JSON files
+**Option 2: Edit JSON files directly**
+- Navigate to the `data/` folder
+- Edit `affirmations.json`, `lessons.json`, etc.
+- Restart the app to see changes
 
-Modifying the system prompts in utils/prompts.py
+**Option 3: Modify the code**
+- Edit default values in `app.py`
+- Customize system prompts for GPT
+- Adjust styling and layout
 
 This makes the app adaptable for different ages, family values, or educational needs.
+
+⚙️ Configuration Options
+
+**In Grown-ups' Corner, you can:**
+
+- ✏️ Set child's name, age, pronouns, and interests
+- 🚫 Block specific topics (death, violence, scary content)
+- 📖 Set reading level (very simple / simple / normal)
+- ⏰ Set daily time limits and quiet hours
+- 💬 Add custom affirmations and lessons
+- 🔐 Change the admin PIN
+- 🤖 Configure OpenAI API settings (model, temperature, etc.)
 
 🤍 Credits
 

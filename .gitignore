@@ -31,11 +31,9 @@ Thumbs.db
 # ---- Logs ----
 *.log
 
-# ---- API keys / configs ----
-config/settings.yaml
-config/filters.json
-config/affirmations.json
-config/lessons.json
+# ---- API keys / configs / data ----
+config/
+data/
 *.secret
 *.key
 *.token
