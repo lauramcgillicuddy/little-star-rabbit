@@ -34,6 +34,11 @@ def inject_css():
             font-family: "Baloo 2", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
 
+        /* Ensure all text is visible */
+        p, span, div, label, .stMarkdown {
+            color: #2B102A;
+        }
+
         /* Use Patrick Hand for tiny helper text */
         .lsr-note {
             font-family: "Patrick Hand", "Baloo 2", system-ui, sans-serif;
@@ -58,17 +63,19 @@ def inject_css():
         h1, h2, h3, .lsr-hero-title {
             font-family: "Baloo 2", system-ui, sans-serif;
             letter-spacing: 0.03em;
+            color: #2B102A !important;
         }
         .lsr-hero-title {
             font-size: 3rem;
             font-weight: 700;
             text-align: center;
             margin-bottom: 0.3rem;
+            color: #2B102A !important;
         }
         .lsr-hero-subtitle {
             text-align: center;
             font-size: 1rem;
-            color: #8a5574;
+            color: #8a5574 !important;
             margin-bottom: 2.2rem;
             font-family: "Patrick Hand", "Baloo 2", system-ui, sans-serif;
         }
@@ -128,6 +135,8 @@ def inject_css():
             white-space: normal;
             height: auto;
             min-height: 180px;
+            color: #2B102A !important;
+            font-size: 1rem;
         }
         div[data-testid="stButton"] > button:hover {
             transform: translateY(-4px);
@@ -211,6 +220,8 @@ def inject_css():
             padding: 0.6rem 1.5rem;
             border: 1px solid #ffd0e1;
             transition: all 0.2s ease;
+            color: #2B102A !important;
+            background-color: #ffffff;
         }
 
         .stButton > button:not([data-testid]):hover {
