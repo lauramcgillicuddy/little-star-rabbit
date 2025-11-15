@@ -48,51 +48,13 @@ def inject_css():
             font-size: 1.35rem;
         }
 
-        /* Background + layout - Super Pink and Magical with Stars! */
+        /* Background + layout - Super Pink and Magical! */
         .stApp {
             background:
-                /* Translucent white stars */
-                radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.6) 0, rgba(255, 255, 255, 0.6) 2px, transparent 2px),
-                radial-gradient(circle at 85% 15%, rgba(255, 255, 255, 0.5) 0, rgba(255, 255, 255, 0.5) 3px, transparent 3px),
-                radial-gradient(circle at 45% 35%, rgba(255, 255, 255, 0.4) 0, rgba(255, 255, 255, 0.4) 2px, transparent 2px),
-                radial-gradient(circle at 65% 60%, rgba(255, 255, 255, 0.5) 0, rgba(255, 255, 255, 0.5) 2.5px, transparent 2.5px),
-                radial-gradient(circle at 25% 75%, rgba(255, 255, 255, 0.4) 0, rgba(255, 255, 255, 0.4) 2px, transparent 2px),
-                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.6) 0, rgba(255, 255, 255, 0.6) 2px, transparent 2px),
-                radial-gradient(circle at 10% 50%, rgba(255, 255, 255, 0.3) 0, rgba(255, 255, 255, 0.3) 2px, transparent 2px),
-                radial-gradient(circle at 75% 40%, rgba(255, 255, 255, 0.5) 0, rgba(255, 255, 255, 0.5) 2px, transparent 2px),
-                /* Pink glows */
                 radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
                 radial-gradient(circle at 80% 70%, rgba(255, 192, 203, 0.3) 0%, transparent 50%),
-                /* Base gradient */
                 linear-gradient(180deg, #ffb6d9 0%, #ffd4e5 30%, #ffe5f0 60%, #fff0f5 100%);
             color: #4a1942;
-            position: relative;
-        }
-
-        /* Add cute doodle hearts */
-        .stApp::before {
-            content: "💕";
-            position: fixed;
-            top: 10%;
-            right: 5%;
-            font-size: 2rem;
-            opacity: 0.15;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .stApp::after {
-            content: "✨";
-            position: fixed;
-            bottom: 15%;
-            left: 8%;
-            font-size: 1.8rem;
-            opacity: 0.15;
-            animation: float 5s ease-in-out infinite 1s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
         }
         .block-container {
             padding-top: 3rem;
