@@ -6,6 +6,7 @@ A trauma-aware, kid-safe app for one very special star.
 import streamlit as st
 import json
 import os
+import time as time_module
 from datetime import datetime, time
 from openai import OpenAI
 from pathlib import Path
@@ -20,7 +21,7 @@ st.set_page_config(
 
 # Custom CSS styling
 def inject_css():
-    """Inject custom CSS for beautiful strawberry milkshake theme"""
+    """Inject custom CSS for beautiful strawberry milkshake theme with starry magic"""
     st.markdown(
         """
         <style>
@@ -37,12 +38,16 @@ def inject_css():
         /* Use Patrick Hand for tiny helper text */
         .lsr-note {
             font-family: "Patrick Hand", "Baloo 2", system-ui, sans-serif;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
-        /* Background + layout */
+        /* Background + layout - with magical stars! */
         .stApp {
-            background: radial-gradient(circle at top, #ffeef7 0%, #fff4ea 40%, #ffe9f2 100%);
+            background:
+                radial-gradient(circle at top left, rgba(255,255,255,0.25) 0, transparent 55%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.17) 0, transparent 50%),
+                radial-gradient(circle at 10% 80%, rgba(255,255,255,0.18) 0, transparent 55%),
+                linear-gradient(180deg, #ffeef7 0%, #fff4ea 45%, #ffe9f2 100%);
             color: #2B102A;
         }
         .block-container {
@@ -54,10 +59,22 @@ def inject_css():
         #MainMenu, footer {visibility: hidden;}
         header {visibility: hidden;}
 
-        /* Titles */
+        /* Titles - bigger and bouncier! */
         h1, h2, h3, .lsr-hero-title {
             font-family: "Baloo 2", system-ui, sans-serif;
             letter-spacing: 0.03em;
+        }
+        h1 {
+            font-size: 2.6rem;
+            font-weight: 700;
+        }
+        h2 {
+            font-size: 2.0rem;
+            font-weight: 600;
+        }
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
         }
         .lsr-hero-title {
             font-size: 3rem;
@@ -67,7 +84,7 @@ def inject_css():
         }
         .lsr-hero-subtitle {
             text-align: center;
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: #8a5574;
             margin-bottom: 2.2rem;
             font-family: "Patrick Hand", "Baloo 2", system-ui, sans-serif;
@@ -114,8 +131,9 @@ def inject_css():
 
         /* Child hub card buttons - make entire card clickable */
         div[data-testid="stButton"] > button {
+            font-family: "Baloo 2", system-ui, sans-serif;
             border-radius: 1.6rem;
-            padding: 1.6rem 1.4rem;
+            padding: 1.8rem 1.6rem;
             background: linear-gradient(145deg, #ffffff, #ffe9f4);
             box-shadow: 0 18px 40px rgba(242, 125, 144, 0.35);
             text-align: left;
@@ -128,6 +146,7 @@ def inject_css():
             white-space: normal;
             height: auto;
             min-height: 180px;
+            font-size: 1rem;
         }
         div[data-testid="stButton"] > button:hover {
             transform: translateY(-4px);
@@ -198,17 +217,13 @@ def inject_css():
             text-align: center;
         }
 
-        /* Regular buttons (non-card) */
-        .stButton > button[kind="primary"] {
-            background: linear-gradient(90deg, #f9739a, #f27d90);
-            color: white;
-            border: none;
-        }
-
+        /* Regular buttons (non-card) - bigger and friendlier */
         .stButton > button:not([data-testid]) {
+            font-family: "Baloo 2", system-ui, sans-serif;
             border-radius: 999px;
             font-weight: 500;
-            padding: 0.6rem 1.5rem;
+            padding: 0.7rem 1.6rem;
+            font-size: 0.98rem;
             border: 1px solid #ffd0e1;
             transition: all 0.2s ease;
         }
@@ -216,6 +231,21 @@ def inject_css():
         .stButton > button:not([data-testid]):hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(242, 125, 144, 0.3);
+        }
+
+        /* Primary CTA-style buttons */
+        .lsr-primary-btn {
+            background: linear-gradient(90deg, #f9739a, #f27d90) !important;
+            color: #fffdf8 !important;
+            box-shadow: 0 10px 24px rgba(242, 125, 144, 0.4);
+            border: none !important;
+        }
+
+        /* Soft secondary buttons */
+        .lsr-secondary-btn {
+            background: #fffdfb !important;
+            border: 1px solid #ffd0e1 !important;
+            color: #4a2037 !important;
         }
 
         /* Streamlit widgets */
@@ -294,6 +324,7 @@ DEFAULT_SETTINGS = {
     "session_length_minutes": 10,
     "quiet_hours_start": "21:00",
     "quiet_hours_end": "07:00",
+    "calm_timer_minutes": 5,  # Default calm timer duration
     "model": "gpt-4o-mini",
     "temperature": 0.7,
     "max_tokens": 500
@@ -457,14 +488,15 @@ def get_openai_client():
     except Exception:
         return None
 
-def synthesize_story_audio(text):
-    """Convert story text to speech using OpenAI TTS"""
+@st.cache_data(show_spinner=False)
+def synthesize_tts(text: str) -> bytes:
+    """Convert text to speech using OpenAI TTS - cached for efficiency"""
     if not text:
-        return None
+        return b""
     try:
         client = get_openai_client()
         if not client:
-            return None
+            return b""
 
         response = client.audio.speech.create(
             model="tts-1",
@@ -474,7 +506,80 @@ def synthesize_story_audio(text):
         return response.content
     except Exception as e:
         st.error(f"Could not generate audio: {str(e)}")
-        return None
+        return b""
+
+def tts_block(label: str, content: str, key: str):
+    """Helper to add a TTS button with audio player"""
+    if st.button(label, key=key, use_container_width=True):
+        with st.spinner("🎤 Getting ready to read..."):
+            audio_bytes = synthesize_tts(content)
+            if audio_bytes:
+                st.audio(audio_bytes, format="audio/mp3")
+
+def generate_feelings_response(feeling: str, child_name: str) -> str:
+    """Generate GPT response for feelings validation"""
+    client = get_openai_client()
+    if not client:
+        return "⚠️ API key not set. Please ask a grown-up to set it up in the Grown-ups' Corner."
+
+    system_prompt = """You are Little Star Rabbit, a gentle, kid-safe emotional support bunny talking to a child.
+The child is between 7 and 10 years old. Use simple sentences, no heavy topics, no
+mention of diagnoses or trauma. Always be validating and kind, never shaming.
+Avoid talking about harm, death, abuse, or scary things. Focus on feelings,
+self-kindness, and asking a trusted grown-up for help when needed.
+
+Format your response in three parts:
+1. VALIDATION: 1-2 sentences validating the feeling
+2. SUGGESTION: 1 short, gentle idea for something they can try (like bunny breaths or talking to someone)
+3. AFFIRMATIONS: 3 short affirmations as bullet points"""
+
+    user_prompt = f"{child_name} is feeling {feeling}. Please respond with validation, a gentle suggestion, and 3 affirmations."
+
+    try:
+        response = client.chat.completions.create(
+            model=settings.get("model", "gpt-4o-mini"),
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.7,
+            max_tokens=400
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"I'm having trouble thinking right now. Maybe try again in a moment? 🌟"
+
+def generate_lesson_text(topic: str, child_name: str) -> str:
+    """Generate GPT response for Little Lessons"""
+    client = get_openai_client()
+    if not client:
+        return "⚠️ API key not set. Please ask a grown-up to set it up in the Grown-ups' Corner."
+
+    system_prompt = """You are Little Star Rabbit, a gentle, kid-safe teacher. Explain the selected topic
+to a 7–10 year old child. Use simple language, short paragraphs, and examples.
+Avoid all scary topics and heavy psychology words. Focus on kindness, self-compassion,
+boundaries, and small practical ideas.
+
+Structure:
+- A short explanation (3–5 sentences)
+- One simple example
+- A tiny "Try this" suggestion at the end"""
+
+    user_prompt = f"Please teach {child_name} about: {topic}"
+
+    try:
+        response = client.chat.completions.create(
+            model=settings.get("model", "gpt-4o-mini"),
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt}
+            ],
+            temperature=0.7,
+            max_tokens=500
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"I'm having trouble thinking right now. Maybe try again in a moment? 🌟"
 
 def generate_story(length, theme, tone):
     """Generate a kid-safe story"""
@@ -652,18 +757,18 @@ def show_child_home():
 
     col3, col4 = st.columns(2, gap="large")
     with col3:
-        if st.button("💖\n\nFeelings & Stars\n\nHow's your little star-heart today?", key="card_feelings", use_container_width=True):
+        if st.button("💖\n\nFeelings & Stars\n\nTap the card that feels closest to your heart", key="card_feelings", use_container_width=True):
             st.session_state["child_page"] = "feelings"
             st.rerun()
 
     with col4:
-        if st.button("🧠\n\nLittle Lessons\n\nTiny ideas for your big brain", key="card_lessons", use_container_width=True):
+        if st.button("🧠\n\nLittle Lessons\n\nChoose a little lesson for your big, clever brain", key="card_lessons", use_container_width=True):
             st.session_state["child_page"] = "lessons"
             st.rerun()
 
     col5, col6 = st.columns(2, gap="large")
     with col5:
-        if st.button("🐚\n\nCalm Burrow\n\nSoft, quiet time in the bunny burrow", key="card_calm", use_container_width=True):
+        if st.button("🐚\n\nCalm Burrow\n\nQuiet time in the bunny burrow", key="card_calm", use_container_width=True):
             st.session_state["child_page"] = "calm"
             st.rerun()
 
@@ -715,11 +820,7 @@ def show_storytime():
         st.markdown("<br>", unsafe_allow_html=True)
 
         # Text-to-speech button
-        if st.button("🔊 Read this story out loud", key="tts_story", use_container_width=True):
-            with st.spinner("🎤 Getting ready to read..."):
-                audio_bytes = synthesize_story_audio(st.session_state["current_story"])
-                if audio_bytes:
-                    st.audio(audio_bytes, format="audio/mp3")
+        tts_block("🔊 Read this story out loud", st.session_state["current_story"], "tts_story")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
@@ -769,6 +870,11 @@ def show_star_facts():
         """, unsafe_allow_html=True)
 
         st.markdown("<br>", unsafe_allow_html=True)
+
+        # Text-to-speech button
+        tts_block("🔊 Read these facts out loud", st.session_state["current_facts"], "tts_facts")
+
+        st.markdown("<br>", unsafe_allow_html=True)
         if st.button("✅ That's enough for today", use_container_width=True):
             st.session_state["current_facts"] = None
             st.session_state["child_page"] = "home"
@@ -806,41 +912,24 @@ def show_feelings():
     if selected_feeling:
         st.markdown("---")
 
-        # Validation messages
-        validations = {
-            "happy": "It's wonderful that you're feeling happy! Your joy is special. 🌟",
-            "sad": "It's okay to feel sad. Lots of people feel sad sometimes. Your feelings are important.",
-            "angry": "It's okay to feel angry. All feelings are okay, even angry ones.",
-            "worried": "It makes sense to feel worried sometimes. Everyone worries. You're not alone.",
-            "numb": "Sometimes we don't know what we're feeling, and that's completely okay. You don't have to figure it all out right now.",
-            "other": "Whatever you're feeling is okay. All your feelings are important."
-        }
+        # Get feeling name for display
+        feeling_name = next((f['name'] for f in feelings if f['key'] == selected_feeling), selected_feeling)
 
+        # Generate GPT response with validation, suggestion, and affirmations
+        with st.spinner("Little Star Rabbit is thinking about how you feel..."):
+            response_text = generate_feelings_response(feeling_name, profile['child_name'])
+
+        # Display the response in a soft card
         st.markdown(f"""
             <div class='lsr-feeling-box'>
-                {validations[selected_feeling]}
+                {response_text.replace('\n', '<br>')}
             </div>
         """, unsafe_allow_html=True)
 
-        # Coping suggestion
-        coping = {
-            "happy": "Maybe you could draw a picture or do something fun to celebrate this feeling!",
-            "sad": "Maybe take 3 bunny breaths with me? Or you could tell a trusted grown-up how you're feeling.",
-            "angry": "Maybe take 3 deep breaths? Or you could squeeze your hands tight and then let go?",
-            "worried": "Maybe put your hand on your heart and take 3 slow breaths? You could also talk to a grown-up you trust.",
-            "numb": "Maybe just sit quietly for a moment? You don't have to do anything special right now.",
-            "other": "Maybe take a moment to just breathe? You could also tell someone how you're feeling."
-        }
+        st.markdown("<br>", unsafe_allow_html=True)
 
-        st.markdown("**A tiny suggestion:**")
-        st.info(coping[selected_feeling])
-
-        # Affirmations
-        st.markdown("**Some things to remember:**")
-        feeling_affirmations = affirmations.get(selected_feeling, affirmations["other"])
-
-        for affirmation in feeling_affirmations:
-            st.markdown(f"✨ {affirmation}")
+        # Add TTS button to listen to the response
+        tts_block("🔊 Listen to this", response_text, f"tts_feeling_{selected_feeling}")
 
         st.markdown("<br>", unsafe_allow_html=True)
 
@@ -853,36 +942,58 @@ def show_feelings():
 def show_lessons():
     """Little lessons section"""
     st.title("🧠 Little Lessons")
-    st.markdown("### Choose a lesson to learn something helpful!")
+    st.markdown("### Choose a little lesson for your big, clever brain!")
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Group lessons by category
-    categories = {
-        "kindness": {"name": "Kindness & Friends", "emoji": "💛", "color": "#fff9e6"},
-        "brave_brain": {"name": "Brave Brain", "emoji": "🧠", "color": "#e6f3ff"},
-        "boundaries": {"name": "Body & Boundaries", "emoji": "🛡", "color": "#ffe6f0"},
-        "school": {"name": "School & Focus", "emoji": "📚", "color": "#f0ffe6"}
-    }
+    # Display lessons as clickable cards
+    lesson_topics = [
+        {"title": "Being Kind to Myself", "emoji": "💛", "key": "kind_self"},
+        {"title": "Trying Again When Things Are Hard", "emoji": "💪", "key": "try_again"},
+        {"title": "My Body Belongs to Me", "emoji": "🛡", "key": "body_boundaries"},
+        {"title": "What Makes a Good Friend", "emoji": "🤝", "key": "good_friend"},
+        {"title": "When I Feel Big Feelings", "emoji": "🌊", "key": "big_feelings"},
+        {"title": "Asking for Help is Brave", "emoji": "🌟", "key": "ask_help"},
+    ]
 
-    # Display lessons
-    for lesson in lessons:
-        cat = lesson.get("category", "other")
-        if cat in categories:
-            cat_info = categories[cat]
+    # Display lesson buttons in a grid
+    cols = st.columns(2)
+    for i, lesson in enumerate(lesson_topics):
+        with cols[i % 2]:
+            if st.button(
+                f"{lesson['emoji']}\n\n{lesson['title']}",
+                use_container_width=True,
+                key=f"lesson_{lesson['key']}"
+            ):
+                st.session_state["selected_lesson"] = lesson
 
-            with st.expander(f"{lesson['emoji']} {lesson['title']}"):
-                st.markdown(f"""
-                    <div style='
-                        background: {cat_info['color']};
-                        padding: 1.5rem;
-                        border-radius: 10px;
-                        font-size: 1.05rem;
-                        line-height: 1.7;
-                    '>
-                        {lesson['content'].replace(chr(10), '<br><br>')}
-                    </div>
-                """, unsafe_allow_html=True)
+    # If a lesson is selected, show GPT-generated content
+    if st.session_state.get("selected_lesson"):
+        lesson = st.session_state["selected_lesson"]
+        st.markdown("---")
+
+        # Generate lesson content with GPT
+        with st.spinner(f"Little Star Rabbit is preparing a lesson about {lesson['title'].lower()}..."):
+            lesson_text = generate_lesson_text(lesson['title'], profile['child_name'])
+
+        # Display in a soft card box
+        st.markdown(f"""
+            <div class='lsr-story-box'>
+                {lesson_text.replace('\n', '<br>')}
+            </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # Add TTS button
+        tts_block("🔊 Listen to this lesson", lesson_text, f"tts_lesson_{lesson['key']}")
+
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # Back button
+        if st.button("← Choose a different lesson", key="back_from_lesson"):
+            del st.session_state["selected_lesson"]
+            st.rerun()
 
 def show_calm_burrow():
     """Calm burrow section"""
@@ -985,35 +1096,102 @@ def show_calm_burrow():
     elif st.session_state.get("calm_activity") == "timer":
         st.markdown("---")
 
-        timer_minutes = settings.get("session_length_minutes", 10)
+        timer_minutes = settings.get("calm_timer_minutes", 5)
 
-        st.markdown(f"""
-            <div style='
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                padding: 3rem 2rem;
-                border-radius: 15px;
-                text-align: center;
-            '>
-                <h2>⏲ Calm Timer</h2>
-                <p style='font-size: 1.3rem; margin: 2rem 0;'>
-                    We're in the burrow for {timer_minutes} minutes of quiet time.
-                </p>
-                <p style='font-size: 3rem; margin: 2rem 0;'>🐇✨</p>
-                <p>
-                    Just rest, breathe, and be calm.<br>
-                    Little Star Rabbit is resting with you.
-                </p>
-            </div>
-        """, unsafe_allow_html=True)
+        # Check if timer is already running
+        if not st.session_state.get("timer_running"):
+            # Show start screen
+            st.markdown(f"""
+                <div style='
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    padding: 3rem 2rem;
+                    border-radius: 15px;
+                    text-align: center;
+                '>
+                    <h2>⏲ Calm Timer</h2>
+                    <p style='font-size: 1.3rem; margin: 2rem 0;'>
+                        Ready for {timer_minutes} minutes of quiet time in the burrow?
+                    </p>
+                    <p style='font-size: 3rem; margin: 2rem 0;'>🐇✨</p>
+                    <p>
+                        Just rest, breathe, and be calm.<br>
+                        Little Star Rabbit will rest with you.
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
 
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.info(f"💡 Set a timer for {timer_minutes} minutes on another device, or just take a quiet rest!")
+            st.markdown("<br>", unsafe_allow_html=True)
 
-        if st.button("I'm done resting", key="done_resting", use_container_width=True):
-            del st.session_state["calm_activity"]
-            st.session_state["child_page"] = "home"
-            st.rerun()
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("🌟 Start Timer", key="start_timer", use_container_width=True):
+                    st.session_state["timer_running"] = True
+                    st.rerun()
+            with col2:
+                if st.button("← Back", key="back_from_timer_start", use_container_width=True):
+                    del st.session_state["calm_activity"]
+                    st.rerun()
+        else:
+            # Run the countdown timer
+            total_seconds = timer_minutes * 60
+            placeholder = st.empty()
+            start_time = time_module.time()
+
+            st.markdown("""
+                <div style='text-align: center; margin-bottom: 2rem;'>
+                    <h2>🐇 Calm Burrow Time 🐇</h2>
+                    <p>Little Star Rabbit is resting with you...</p>
+                </div>
+            """, unsafe_allow_html=True)
+
+            while True:
+                elapsed = int(time_module.time() - start_time)
+                remaining = total_seconds - elapsed
+
+                if remaining <= 0:
+                    break
+
+                mins, secs = divmod(remaining, 60)
+                placeholder.markdown(f"""
+                    <div style='
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        padding: 4rem 2rem;
+                        border-radius: 15px;
+                        text-align: center;
+                        font-size: 3rem;
+                        font-weight: 700;
+                        margin: 2rem 0;
+                    '>
+                        {mins:02d}:{secs:02d}
+                    </div>
+                """, unsafe_allow_html=True)
+                time_module.sleep(1)
+
+            # Timer finished
+            placeholder.markdown("""
+                <div style='
+                    background: linear-gradient(135deg, #f9739a 0%, #f27d90 100%);
+                    color: white;
+                    padding: 3rem 2rem;
+                    border-radius: 15px;
+                    text-align: center;
+                '>
+                    <h2>✨ Time is up! ✨</h2>
+                    <p style='font-size: 1.5rem; margin: 2rem 0;'>🐇💖</p>
+                    <p>Little Star Rabbit is done resting with you.</p>
+                    <p>Well done taking quiet time!</p>
+                </div>
+            """, unsafe_allow_html=True)
+
+            st.markdown("<br>", unsafe_allow_html=True)
+
+            if st.button("All done!", key="done_resting", use_container_width=True):
+                del st.session_state["calm_activity"]
+                del st.session_state["timer_running"]
+                st.session_state["child_page"] = "home"
+                st.rerun()
 
 # ============================================================================
 # ADMIN MODE
