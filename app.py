@@ -235,6 +235,11 @@ def inject_css():
             font-weight: 500;
             color: #4a2037;
         }
+
+        /* Ensure sidebar is visible */
+        section[data-testid="stSidebar"] {
+            visibility: visible !important;
+        }
         </style>
         """,
         unsafe_allow_html=True,
@@ -1039,6 +1044,7 @@ def show_admin_mode():
 
     # Show sidebar navigation
     st.sidebar.title("🔒 Grown-ups' Corner")
+    st.sidebar.markdown("**Navigation Menu**")
 
     admin_pages = {
         "profile": "👤 Child Profile",
@@ -1113,7 +1119,17 @@ def show_admin_profile():
     st.title("👤 Child Profile")
     st.markdown("Customize the app for your child")
 
-    st.info("👈 Use the sidebar on the left to navigate to Content Settings, Time & Limits, and other sections!")
+    st.warning("""
+    **📍 To access other admin sections:**
+
+    Look for the **>** arrow in the **top-left corner** of your screen.
+
+    Click it to open the sidebar menu where you'll find:
+    - ⚙️ Content Settings
+    - 💝 Affirmations & Lessons
+    - ⏰ Time & Limits
+    - 🔐 Safety & API
+    """)
 
     st.markdown("---")
 
