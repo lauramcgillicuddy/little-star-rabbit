@@ -20,35 +20,38 @@ st.set_page_config(
 
 # Custom CSS styling
 def inject_css():
-    """Inject custom CSS for beautiful strawberry milkshake theme"""
+    """Inject custom CSS for adorable pink handwritten theme"""
     st.markdown(
         """
         <style>
-        /* --- IMPORT FONTS --- */
-        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Patrick+Hand&display=swap');
+        /* --- IMPORT CUTE HANDWRITTEN FONTS --- */
+        @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Covered+By+Your+Grace&family=Indie+Flower&family=Caveat:wght@400;700&display=swap');
 
-        /* --- GLOBAL FONT OVERRIDES --- */
+        /* --- GLOBAL FONT OVERRIDES - Super Cute Handwritten! --- */
         .stApp, .block-container, .stMarkdown, .stText, .stTextInput, .stNumberInput,
         .stRadio, .stSelectbox, .stTextarea, .stCheckbox, .stButton > button,
         .stTabs [data-baseweb="tab"], label, p, div {
-            font-family: "Baloo 2", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: "Patrick Hand", "Indie Flower", cursive, sans-serif;
         }
 
         /* Ensure all text is visible */
         p, span, div, label, .stMarkdown {
-            color: #2B102A;
+            color: #4a1942;
         }
 
-        /* Use Patrick Hand for tiny helper text */
+        /* Use extra cute handwritten for helper text */
         .lsr-note {
-            font-family: "Patrick Hand", "Baloo 2", system-ui, sans-serif;
-            font-size: 0.95rem;
+            font-family: "Covered By Your Grace", "Patrick Hand", cursive;
+            font-size: 1.1rem;
         }
 
-        /* Background + layout */
+        /* Background + layout - Super Pink and Magical! */
         .stApp {
-            background: radial-gradient(circle at top, #ffeef7 0%, #fff4ea 40%, #ffe9f2 100%);
-            color: #2B102A;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 192, 203, 0.3) 0%, transparent 50%),
+                linear-gradient(180deg, #ffb6d9 0%, #ffd4e5 30%, #ffe5f0 60%, #fff0f5 100%);
+            color: #4a1942;
         }
         .block-container {
             padding-top: 3rem;
@@ -59,28 +62,41 @@ def inject_css():
         #MainMenu, footer {visibility: hidden;}
         header {visibility: hidden;}
 
-        /* Titles */
+        /* Titles - Big and Playful! */
         h1, h2, h3, .lsr-hero-title {
-            font-family: "Baloo 2", system-ui, sans-serif;
-            letter-spacing: 0.03em;
-            color: #2B102A !important;
+            font-family: "Caveat", "Patrick Hand", cursive;
+            letter-spacing: 0.02em;
+            color: #d5006d !important;
+            text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.4);
+        }
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+        }
+        h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
         }
         .lsr-hero-title {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 700;
             text-align: center;
-            margin-bottom: 0.3rem;
-            color: #2B102A !important;
+            margin-bottom: 0.5rem;
+            color: #d5006d !important;
         }
         .lsr-hero-subtitle {
             text-align: center;
-            font-size: 1rem;
-            color: #8a5574 !important;
+            font-size: 1.3rem;
+            color: #c2185b !important;
             margin-bottom: 2.2rem;
-            font-family: "Patrick Hand", "Baloo 2", system-ui, sans-serif;
+            font-family: "Covered By Your Grace", "Patrick Hand", cursive;
         }
 
-        /* Big CTA buttons on landing */
+        /* Big CTA buttons on landing - Extra Cute! */
         .lsr-cta-row {
             display: flex;
             gap: 1rem;
@@ -89,156 +105,191 @@ def inject_css():
             margin-bottom: 2rem;
         }
         .lsr-cta-main {
-            border-radius: 999px;
-            padding: 0.9rem 2.6rem;
-            border: none;
+            border-radius: 2rem;
+            padding: 1rem 2.8rem;
+            border: 3px solid #ff69b4;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            box-shadow: 0 12px 26px rgba(242, 125, 144, 0.4);
-            background: linear-gradient(90deg, #f9739a, #f27d90);
-            color: #fffdf8;
+            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.4);
+            background: linear-gradient(135deg, #ff85c0, #ffb6d9);
+            color: #fff;
+            transition: transform 0.2s ease;
+        }
+        .lsr-cta-main:hover {
+            transform: scale(1.05) rotate(-1deg);
         }
         .lsr-cta-secondary {
-            border-radius: 999px;
-            padding: 0.9rem 2.6rem;
-            border: 1px solid #ffd0e1;
-            background: #fffdfb;
+            border-radius: 2rem;
+            padding: 1rem 2.8rem;
+            border: 3px solid #ffb6d9;
+            background: #fff;
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            color: #4a2037;
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+            color: #c2185b;
+            box-shadow: 0 6px 16px rgba(255, 182, 193, 0.3);
+            transition: transform 0.2s ease;
+        }
+        .lsr-cta-secondary:hover {
+            transform: scale(1.05) rotate(1deg);
         }
 
-        /* Tabs */
+        /* Tabs - Cute and Pink! */
         .stTabs [data-baseweb="tab"] {
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             font-weight: 600;
-            padding-top: 0.4rem;
-            padding-bottom: 0.4rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 1rem 1rem 0 0;
+            font-family: "Patrick Hand", cursive;
+        }
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 0.5rem;
         }
 
-        /* Child hub card buttons - make entire card clickable */
+        /* Child hub card buttons - Super Cute Cards! */
         div[data-testid="stButton"] > button {
-            border-radius: 1.6rem;
-            padding: 1.6rem 1.4rem;
-            background: linear-gradient(145deg, #ffffff, #ffe9f4);
-            box-shadow: 0 18px 40px rgba(242, 125, 144, 0.35);
+            border-radius: 2rem;
+            padding: 2rem 1.8rem;
+            background: linear-gradient(145deg, #fff, #ffe5f0);
+            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
+            border: 3px solid #ffb6d9;
             text-align: left;
-            border: none;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             cursor: pointer;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            transition: all 0.3s ease;
             white-space: normal;
             height: auto;
             min-height: 180px;
-            color: #2B102A !important;
-            font-size: 1rem;
+            color: #4a1942 !important;
+            font-size: 1.1rem;
         }
         div[data-testid="stButton"] > button:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 22px 50px rgba(242, 125, 144, 0.45);
+            transform: translateY(-6px) rotate(-1deg);
+            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.5);
+            border-color: #ff85c0;
         }
 
         .lsr-card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 0.8rem;
+            font-size: 3rem;
+            margin-bottom: 1rem;
             display: block;
         }
         .lsr-card-title {
-            font-size: 1.25rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.5rem;
             display: block;
-            color: #2B102A;
+            color: #d5006d;
         }
         .lsr-card-sub {
-            font-size: 0.95rem;
-            color: #8a5574;
-            font-family: "Patrick Hand", "Baloo 2", system-ui, sans-serif;
-            display: block;
-            line-height: 1.4;
-        }
-
-        /* Story box */
-        .lsr-story-box {
-            border-radius: 1.4rem;
-            padding: 1.4rem 1.6rem;
-            background: #fffdfb;
-            border: 1px solid #ffd9ea;
-            box-shadow: 0 12px 30px rgba(242, 125, 144, 0.35);
-            line-height: 1.7;
-            font-size: 1.02rem;
-        }
-
-        /* Fact box */
-        .lsr-fact-box {
-            border-radius: 1.4rem;
-            padding: 1.4rem 1.6rem;
-            background: linear-gradient(135deg, #fffef9 0%, #fff8e1 100%);
-            border: 2px solid #ffd700;
-            box-shadow: 0 12px 30px rgba(255, 215, 0, 0.15);
-            line-height: 1.7;
-            font-size: 1.02rem;
-        }
-
-        /* Feeling boxes */
-        .lsr-feeling-box {
-            border-radius: 1.2rem;
-            padding: 1.3rem 1.5rem;
-            background: linear-gradient(135deg, #fff0f5 0%, #ffe6f0 100%);
-            border-left: 5px solid #f27d90;
-            box-shadow: 0 8px 20px rgba(242, 125, 144, 0.25);
-            margin-bottom: 1.5rem;
             font-size: 1.05rem;
+            color: #c2185b;
+            font-family: "Covered By Your Grace", "Patrick Hand", cursive;
+            display: block;
+            line-height: 1.5;
+        }
+
+        /* Story box - Super Cute! */
+        .lsr-story-box {
+            border-radius: 2rem;
+            padding: 2rem 2.2rem;
+            background: linear-gradient(135deg, #fff 0%, #ffe5f0 100%);
+            border: 3px solid #ffb6d9;
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.3);
+            line-height: 1.8;
+            font-size: 1.15rem;
+        }
+
+        /* Fact box - Sparkly! */
+        .lsr-fact-box {
+            border-radius: 2rem;
+            padding: 2rem 2.2rem;
+            background: linear-gradient(135deg, #ffffed 0%, #fff8dc 100%);
+            border: 3px solid #ffd700;
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+            line-height: 1.8;
+            font-size: 1.15rem;
+        }
+
+        /* Feeling boxes - Extra Pink! */
+        .lsr-feeling-box {
+            border-radius: 1.8rem;
+            padding: 1.8rem 2rem;
+            background: linear-gradient(135deg, #ffe5f0 0%, #ffd4e5 100%);
+            border: 3px solid #ff85c0;
+            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
+            margin-bottom: 1.5rem;
+            font-size: 1.15rem;
         }
 
         .lsr-info-box {
-            border-radius: 1.2rem;
-            padding: 1rem 1.3rem;
-            background: linear-gradient(135deg, #fff4ea 0%, #ffe9f2 100%);
-            border-left: 4px solid #f27d90;
+            border-radius: 1.8rem;
+            padding: 1.5rem 1.8rem;
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe5f0 100%);
+            border: 3px solid #ffb6d9;
             margin: 1rem 0;
-            font-style: italic;
-            color: #555;
+            color: #c2185b;
             text-align: center;
+            font-size: 1.1rem;
         }
 
-        /* Regular buttons (non-card) */
+        /* Regular buttons (non-card) - Cute and Pink! */
         .stButton > button[kind="primary"] {
-            background: linear-gradient(90deg, #f9739a, #f27d90);
+            background: linear-gradient(135deg, #ff85c0, #ffb6d9);
             color: white;
             border: none;
+            border-radius: 2rem;
+            font-size: 1.05rem;
         }
 
         .stButton > button:not([data-testid]) {
-            border-radius: 999px;
+            border-radius: 2rem;
             font-weight: 500;
-            padding: 0.6rem 1.5rem;
-            border: 1px solid #ffd0e1;
+            padding: 0.8rem 1.8rem;
+            border: 2px solid #ffb6d9;
             transition: all 0.2s ease;
-            color: #2B102A !important;
+            color: #4a1942 !important;
             background-color: #ffffff;
+            font-size: 1.05rem;
         }
 
         .stButton > button:not([data-testid]):hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(242, 125, 144, 0.3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.4);
+            border-color: #ff85c0;
         }
 
-        /* Streamlit widgets */
+        /* Streamlit widgets - Cute! */
         .stRadio > label, .stSelectbox > label, .stTextInput > label,
         .stNumberInput > label, .stTextarea > label {
-            font-weight: 500;
-            color: #4a2037;
+            font-weight: 600;
+            color: #c2185b;
+            font-size: 1.1rem;
+        }
+
+        /* Input fields - Pink borders! */
+        input, textarea, select {
+            border-radius: 1rem !important;
+            border: 2px solid #ffb6d9 !important;
+            font-family: "Patrick Hand", cursive !important;
+        }
+
+        /* Radio and checkboxes - Pink! */
+        .stRadio > div {
+            gap: 0.8rem;
         }
 
         /* Ensure sidebar is visible */
         section[data-testid="stSidebar"] {
             visibility: visible !important;
+        }
+
+        /* Add cute hover effects everywhere! */
+        .stSelectbox:hover, .stTextInput:hover, .stNumberInput:hover {
+            transform: scale(1.01);
         }
         </style>
         """,
