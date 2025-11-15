@@ -18,6 +18,196 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# Custom CSS styling
+def inject_css():
+    """Inject custom CSS for beautiful starry theme"""
+    st.markdown(
+        """
+        <style>
+        /* --- GENERAL LAYOUT --- */
+        .stApp {
+            background: radial-gradient(circle at top, #fef6ff 0%, #f7f4ff 40%, #f0f4ff 100%);
+        }
+
+        .block-container {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            max-width: 900px;
+        }
+
+        /* Hide Streamlit default stuff (optional) */
+        #MainMenu, footer {visibility: hidden;}
+        header {visibility: hidden;}
+
+        /* --- TITLES --- */
+        .lsr-hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+        .lsr-hero-subtitle {
+            text-align: center;
+            font-size: 1rem;
+            color: #6b5878;
+            margin-bottom: 2.5rem;
+        }
+
+        /* --- BIG CTA BUTTONS (landing) --- */
+        .lsr-cta-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+            margin-bottom: 2rem;
+        }
+        .lsr-cta {
+            border-radius: 999px;
+            padding: 0.85rem 2.4rem;
+            border: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(90, 62, 180, 0.25);
+            background: linear-gradient(90deg, #a855f7, #6366f1);
+            color: white;
+        }
+        .lsr-cta-secondary {
+            border-radius: 999px;
+            padding: 0.85rem 2.4rem;
+            border: 1px solid #e2d5ff;
+            background: white;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            color: #33213c;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.04);
+        }
+
+        /* --- CHILD HUB CARDS --- */
+        .lsr-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .lsr-card {
+            border-radius: 1.5rem;
+            padding: 1.6rem 1.4rem;
+            background: linear-gradient(145deg, #ffffff, #e8f0ff);
+            box-shadow: 0 18px 40px rgba(123, 97, 255, 0.15);
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .lsr-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 22px 50px rgba(123, 97, 255, 0.25);
+        }
+
+        .lsr-card-icon {
+            font-size: 2rem;
+            margin-bottom: 0.6rem;
+        }
+        .lsr-card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+        .lsr-card-sub {
+            font-size: 0.9rem;
+            color: #6b5878;
+            margin-bottom: 1.2rem;
+        }
+        .lsr-card-button {
+            display: inline-block;
+            border-radius: 999px;
+            padding: 0.45rem 1.3rem;
+            font-size: 0.85rem;
+            border: 1px solid #d7c7ff;
+            background: #ffffff;
+            color: #4b2a6a;
+            font-weight: 500;
+        }
+
+        /* --- STORY BOX --- */
+        .lsr-story-box {
+            border-radius: 1.4rem;
+            padding: 1.4rem 1.6rem;
+            background: #ffffff;
+            border: 1px solid #e3ddff;
+            box-shadow: 0 12px 30px rgba(83, 64, 170, 0.12);
+            line-height: 1.6;
+            font-size: 1.0rem;
+        }
+
+        /* --- FACT BOX --- */
+        .lsr-fact-box {
+            border-radius: 1.4rem;
+            padding: 1.4rem 1.6rem;
+            background: linear-gradient(135deg, #fffef9 0%, #fff8e1 100%);
+            border: 2px solid #ffd700;
+            box-shadow: 0 12px 30px rgba(255, 215, 0, 0.15);
+            line-height: 1.6;
+            font-size: 1.0rem;
+        }
+
+        /* --- FEELING BOXES --- */
+        .lsr-feeling-box {
+            border-radius: 1.2rem;
+            padding: 1.3rem 1.5rem;
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe6f0 100%);
+            border-left: 5px solid #ff69b4;
+            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.1);
+            margin-bottom: 1.5rem;
+            font-size: 1.05rem;
+        }
+
+        .lsr-info-box {
+            border-radius: 1.2rem;
+            padding: 1rem 1.3rem;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 100%);
+            border-left: 4px solid #6366f1;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #555;
+            text-align: center;
+        }
+
+        /* --- BUTTONS --- */
+        .stButton > button {
+            border-radius: 999px;
+            font-weight: 500;
+            padding: 0.6rem 1.5rem;
+            border: 1px solid #e2d5ff;
+            transition: all 0.2s ease;
+        }
+
+        .stButton > button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
+        }
+
+        /* --- STREAMLIT WIDGETS --- */
+        .stRadio > label {
+            font-weight: 500;
+            color: #4b2a6a;
+        }
+
+        .stTextInput > label, .stNumberInput > label, .stSelectbox > label {
+            font-weight: 500;
+            color: #4b2a6a;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
 # Data directory setup
 DATA_DIR = Path("data")
 DATA_DIR.mkdir(exist_ok=True)
@@ -342,15 +532,13 @@ Think of facts that would make a child say "WOW!" or "COOL!" """
 def show_landing():
     """Landing page with mode selection"""
     st.markdown("""
-        <div style='text-align: center; padding: 2rem 0;'>
-            <h1 style='font-size: 3rem; margin-bottom: 0;'>🌟 Little Star Rabbit 🐇</h1>
-            <p style='font-size: 1.2rem; color: #888; font-style: italic;'>
-                A tiny, safe cosmos for one very special star
-            </p>
+        <div class="lsr-hero-title">🌟 Little Star Rabbit 🐇</div>
+        <div class="lsr-hero-subtitle">
+            A tiny, safe cosmos for one very special star
         </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
 
     col1, col2 = st.columns(2, gap="large")
 
@@ -399,14 +587,8 @@ def show_child_mode():
 
 def show_child_home():
     """Child mode home hub with activity cards"""
-    st.markdown(f"""
-        <div style='text-align: center; padding: 1rem 0;'>
-            <h1>Hello, {profile['child_name']}! 🌟</h1>
-            <p style='font-size: 1.1rem; color: #666;'>What would you like to do today?</p>
-        </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(f"<h1 style='text-align:center;'>Hello, {profile['child_name']}! 🌟</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;color:#6b5878;'>What would you like to do today?</p>", unsafe_allow_html=True)
 
     # Activity cards
     activities = [
@@ -417,29 +599,24 @@ def show_child_home():
         {"name": "Calm Burrow", "emoji": "🐚", "page": "calm", "desc": "Quiet time with the bunny"},
     ]
 
-    # Create cards in a grid
+    # Create card grid with buttons
     for i in range(0, len(activities), 2):
-        cols = st.columns(2, gap="medium")
+        cols = st.columns(2, gap="large")
         for j, col in enumerate(cols):
             if i + j < len(activities):
                 activity = activities[i + j]
                 with col:
                     st.markdown(f"""
-                        <div style='
-                            border: 2px solid #e0e0e0;
-                            border-radius: 15px;
-                            padding: 2rem 1rem;
-                            text-align: center;
-                            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-                            margin-bottom: 1rem;
-                        '>
-                            <div style='font-size: 4rem; margin-bottom: 0.5rem;'>{activity['emoji']}</div>
-                            <h3 style='margin: 0.5rem 0;'>{activity['name']}</h3>
-                            <p style='color: #666; font-size: 0.9rem;'>{activity['desc']}</p>
+                        <div class='lsr-card'>
+                            <div>
+                                <div class='lsr-card-icon'>{activity['emoji']}</div>
+                                <div class='lsr-card-title'>{activity['name']}</div>
+                                <div class='lsr-card-sub'>{activity['desc']}</div>
+                            </div>
                         </div>
                     """, unsafe_allow_html=True)
 
-                    if st.button(f"Go to {activity['name']}", key=activity['page'], use_container_width=True):
+                    if st.button(f"Go", key=activity['page'], use_container_width=True):
                         st.session_state["child_page"] = activity['page']
                         st.rerun()
 
@@ -483,14 +660,7 @@ def show_storytime():
     if st.session_state.get("current_story"):
         st.markdown("---")
         st.markdown(f"""
-            <div style='
-                background: #f9f9f9;
-                padding: 2rem;
-                border-radius: 15px;
-                border-left: 5px solid #6e8efb;
-                font-size: 1.1rem;
-                line-height: 1.8;
-            '>
+            <div class='lsr-story-box'>
                 {st.session_state["current_story"]}
             </div>
         """, unsafe_allow_html=True)
@@ -537,14 +707,7 @@ def show_star_facts():
     if st.session_state.get("current_facts"):
         st.markdown("---")
         st.markdown(f"""
-            <div style='
-                background: #fffef9;
-                padding: 2rem;
-                border-radius: 15px;
-                border: 2px solid #ffd700;
-                font-size: 1.1rem;
-                line-height: 1.8;
-            '>
+            <div class='lsr-fact-box'>
                 {st.session_state["current_facts"]}
             </div>
         """, unsafe_allow_html=True)
@@ -598,14 +761,7 @@ def show_feelings():
         }
 
         st.markdown(f"""
-            <div style='
-                background: #fff0f5;
-                padding: 1.5rem;
-                border-radius: 15px;
-                border-left: 5px solid #ff69b4;
-                font-size: 1.1rem;
-                margin-bottom: 1.5rem;
-            '>
+            <div class='lsr-feeling-box'>
                 {validations[selected_feeling]}
             </div>
         """, unsafe_allow_html=True)
@@ -633,14 +789,7 @@ def show_feelings():
         st.markdown("<br>", unsafe_allow_html=True)
 
         st.markdown("""
-            <div style='
-                background: #f0f8ff;
-                padding: 1rem;
-                border-radius: 10px;
-                text-align: center;
-                font-style: italic;
-                color: #555;
-            '>
+            <div class='lsr-info-box'>
                 💫 Remember: You can always ask a grown-up for help. You don't have to do it all alone. 💫
             </div>
         """, unsafe_allow_html=True)
@@ -1222,29 +1371,8 @@ def main():
     """Main app controller"""
     init_session_state()
 
-    # Custom CSS
-    st.markdown("""
-        <style>
-        .stButton > button {
-            font-size: 1.1rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            font-weight: 500;
-        }
-
-        .stButton > button[kind="primary"] {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        h1, h2, h3 {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .stMarkdown {
-            font-size: 1.05rem;
-        }
-        </style>
-    """, unsafe_allow_html=True)
+    # Inject custom CSS for beautiful starry theme
+    inject_css()
 
     # Route to appropriate mode
     if st.session_state["mode"] == "landing":
