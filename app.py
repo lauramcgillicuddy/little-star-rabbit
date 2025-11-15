@@ -445,9 +445,15 @@ def check_usage_limit():
 
 # OpenAI helper
 def get_openai_client():
-    """Get OpenAI client using environment variable"""
+    """Get OpenAI client using Streamlit secrets or environment variable"""
     try:
-        return OpenAI()  # Uses OPENAI_API_KEY from environment
+        # Check if API key is in settings (from Streamlit secrets or local JSON)
+        api_key = settings.get('api_key')
+        if api_key:
+            return OpenAI(api_key=api_key)
+        else:
+            # Fall back to OPENAI_API_KEY environment variable (for local dev)
+            return OpenAI()
     except Exception:
         return None
 
