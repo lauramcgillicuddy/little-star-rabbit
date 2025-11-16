@@ -8,9 +8,17 @@ import streamlit.components.v1 as components
 import json
 import os
 import time as time_module
-from datetime import datetime, time
+from datetime import datetime, time, date
 from openai import OpenAI
 from pathlib import Path
+
+# Import our new utilities
+from gpt_utils import (
+    generate_story, generate_star_facts, generate_feelings_response,
+    generate_little_lesson, generate_daily_affirmation, answer_wonder_question,
+    generate_wonder_question_prompt, generate_routine_content, StoryOptions
+)
+from tts_utils import render_read_aloud, render_read_aloud_simple, text_to_speech
 
 # Page config
 st.set_page_config(
@@ -371,6 +379,23 @@ def init_session_state():
         "current_facts": None,
         "calm_timer_start": None,
         "calm_timer_duration": 0,
+        # NEW: Daily affirmation
+        "daily_affirmation": None,
+        "affirmation_date": None,
+        # NEW: Little Wins tracking
+        "completed_storytime_today": False,
+        "selected_feeling_today": False,
+        "did_bunny_breaths_today": False,
+        "asked_wonder_question_today": False,
+        "used_journal_today": False,
+        "used_routines_today": False,
+        # NEW: Secret Strengths
+        "feelings_count": 0,
+        "storytime_count": 0,
+        "questions_asked_count": 0,
+        "unlocked_strengths": set(),
+        # NEW: Wonder question suggestion
+        "wonder_suggestion": None,
     }
 
     for key, value in defaults.items():
@@ -691,6 +716,55 @@ Think of facts that would make a child say "WOW!" or "COOL!" """
         return f"⚠️ Oops! Something went wrong: {str(e)}"
 
 # ============================================================================
+# NEW FEATURE HELPERS
+# ============================================================================
+
+def get_daily_affirmation():
+    """Get or generate daily affirmation"""
+    today = date.today()
+    child_name = profile.get("child_name", "Little Star")
+
+    # Check if we need a new affirmation
+    if (st.session_state.get("affirmation_date") != today or
+        not st.session_state.get("daily_affirmation")):
+        affirmation = generate_daily_affirmation(child_name)
+        st.session_state["daily_affirmation"] = affirmation
+        st.session_state["affirmation_date"] = today
+
+    return st.session_state["daily_affirmation"]
+
+def unlock_strength(strength_id: str):
+    """Unlock a secret strength"""
+    if "unlocked_strengths" not in st.session_state:
+        st.session_state["unlocked_strengths"] = set()
+    st.session_state["unlocked_strengths"].add(strength_id)
+
+def check_strength_unlocks():
+    """Check if any new strengths should be unlocked"""
+    # Notice feelings
+    if st.session_state.get("feelings_count", 0) >= 3:
+        unlock_strength("feelings_noticer")
+
+    # Curious learner
+    if st.session_state.get("storytime_count", 0) >= 5:
+        unlock_strength("curious_learner")
+
+    # Wonder seeker
+    if st.session_state.get("questions_asked_count", 0) >= 3:
+        unlock_strength("wonder_seeker")
+
+# Emotion character mapping
+EMOTION_CHARACTERS = {
+    "happy": {"name": "Sunny", "emoji": "🌞"},
+    "sad": {"name": "Drippy", "emoji": "💧"},
+    "angry": {"name": "Blaze", "emoji": "🔥"},
+    "worried": {"name": "Zoomer", "emoji": "💨"},
+    "scared": {"name": "Shiver", "emoji": "❄️"},
+    "numb": {"name": "Floaty", "emoji": "☁️"},
+    "something else": {"name": "Mystery Star", "emoji": "✨"},
+}
+
+# ============================================================================
 # LANDING PAGE
 # ============================================================================
 
@@ -749,96 +823,162 @@ def show_child_mode():
         show_lessons()
     elif st.session_state["child_page"] == "calm":
         show_calm_burrow()
+    # NEW PAGES
+    elif st.session_state["child_page"] == "wonder":
+        show_ask_a_little_star()
+    elif st.session_state["child_page"] == "journal":
+        show_bunny_journal()
+    elif st.session_state["child_page"] == "routines":
+        show_star_routines()
+    elif st.session_state["child_page"] == "wins":
+        show_little_wins()
+    elif st.session_state["child_page"] == "strengths":
+        show_secret_strengths()
 
 def show_child_home():
-    """Child mode home hub with activity cards"""
-    st.markdown(f"<h1 style='text-align:center;'>Hello, {profile['child_name']}! 🌟</h1>", unsafe_allow_html=True)
-    st.markdown("<p class='lsr-note' style='text-align:center;'>What would you like to do today?</p>", unsafe_allow_html=True)
+    """Enhanced home page with daily affirmation and new features"""
+    child_name = profile.get("child_name", "Little Star")
+
+    # Header
+    st.markdown(f"""
+        <div class="lsr-hero-title">🌟 Hello, {child_name}! 🐇</div>
+        <div class="lsr-hero-subtitle">
+            Welcome to your safe little cosmos
+        </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # Activity cards - each card is a clickable button with emoji text
-    col1, col2 = st.columns(2, gap="large")
+    # FEATURE 1: Daily Affirmation
+    st.markdown("### 🌟 Little Star Message")
+    affirmation = get_daily_affirmation()
+
+    st.markdown(f"""
+        <div style='
+            background: linear-gradient(135deg, #ffe5f0 0%, #fff0f5 100%);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 3px solid #ffb6d9;
+            text-align: center;
+            margin: 1rem 0 2rem 0;
+            font-size: 1.3rem;
+            color: #c2185b;
+            box-shadow: 0 8px 20px rgba(255, 182, 217, 0.3);
+        '>
+            {affirmation}
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Read aloud button for affirmation
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        render_read_aloud_simple(affirmation, "daily_affirmation")
+
+    st.markdown("---")
+
+    # Navigation cards
+    st.markdown("### Choose an adventure:")
+
+    col1, col2 = st.columns(2, gap="medium")
+
     with col1:
-        if st.button("🌙\n\nStorytime\n\nSnuggle in for a cozy story", key="card_storytime", use_container_width=True):
+        if st.button("📖\n\nStorytime", use_container_width=True, type="primary"):
             st.session_state["child_page"] = "storytime"
             st.rerun()
 
-    with col2:
-        if st.button("✨\n\nStar Facts\n\nLet's learn something cool together", key="card_facts", use_container_width=True):
+        if st.button("🌟\n\nStar Facts", use_container_width=True):
             st.session_state["child_page"] = "facts"
             st.rerun()
 
-    col3, col4 = st.columns(2, gap="large")
-    with col3:
-        if st.button("💖\n\nFeelings & Stars\n\nHow's your little star-heart today?", key="card_feelings", use_container_width=True):
+        if st.button("💖\n\nFeelings & Stars", use_container_width=True):
             st.session_state["child_page"] = "feelings"
             st.rerun()
 
-    with col4:
-        if st.button("🧠\n\nLittle Lessons\n\nTiny ideas for your big brain", key="card_lessons", use_container_width=True):
+        if st.button("🌈\n\nLittle Lessons", use_container_width=True):
             st.session_state["child_page"] = "lessons"
             st.rerun()
 
-    col5, col6 = st.columns(2, gap="large")
-    with col5:
-        if st.button("🐚\n\nCalm Burrow\n\nSoft, quiet time in the bunny burrow", key="card_calm", use_container_width=True):
+    with col2:
+        if st.button("🐇\n\nCalm Burrow", use_container_width=True):
             st.session_state["child_page"] = "calm"
             st.rerun()
 
-    # Exit button
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    if st.button("👋 All done for now", key="exit_child", use_container_width=True):
-        st.session_state["mode"] = "landing"
-        st.session_state["child_page"] = "home"
-        st.rerun()
+        # FEATURE 2: Ask a Little Star
+        if st.button("✨\n\nAsk a Little Star", use_container_width=True):
+            st.session_state["child_page"] = "wonder"
+            st.rerun()
 
-def show_storytime():
-    """Storytime section"""
-    st.title("🌙 Storytime")
-    st.markdown("### What kind of story do you want today?")
+        # FEATURE 5: Bunny Journal
+        if st.button("📓\n\nBunny Journal", use_container_width=True):
+            st.session_state["child_page"] = "journal"
+            st.rerun()
 
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.markdown("**How long?**")
-        length = st.radio("Length", ["Short", "Medium", "A bit longer"], label_visibility="collapsed", key="story_length")
-
-    with col2:
-        st.markdown("**What about?**")
-        theme = st.radio("Theme", ["Animals", "Space", "Magic", "Friends", "Surprise me!"], label_visibility="collapsed", key="story_theme")
-
-    with col3:
-        st.markdown("**What kind?**")
-        tone = st.radio("Tone", ["Silly", "Calm", "Adventurous"], label_visibility="collapsed", key="story_tone")
+        # FEATURE 6: Star Routines
+        if st.button("🌅\n\nLittle Star Routines", use_container_width=True):
+            st.session_state["child_page"] = "routines"
+            st.rerun()
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    if st.button("✨ Tell me a story!", use_container_width=True, type="primary"):
-        with st.spinner("🌟 Little Star Rabbit is thinking of a story..."):
-            story = generate_story(
-                length.lower().replace("a bit longer", "long"),
-                theme.lower().replace("surprise me!", "surprise"),
-                tone.lower()
-            )
-            st.session_state["current_story"] = story
+    # Links to achievements
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        if st.button("🏅 Little Wins", use_container_width=True):
+            st.session_state["child_page"] = "wins"
+            st.rerun()
+    with col2:
+        if st.button("⭐ Secret Strengths", use_container_width=True):
+            st.session_state["child_page"] = "strengths"
+            st.rerun()
+    with col3:
+        if st.button("🚪 Exit", use_container_width=True):
+            st.session_state["mode"] = "landing"
+            st.rerun()
 
+def show_storytime():
+    """Updated storytime with GPT integration and TTS"""
+    child_name = profile.get("child_name", "Little Star")
+
+    st.markdown("### 📖 Storytime")
+
+    # Story options
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        length = st.selectbox("Length", ["short", "medium", "long"])
+    with col2:
+        topic = st.selectbox("Topic", [
+            "animals", "nature", "space", "magic",
+            "friendship", "adventure", "cozy day"
+        ])
+    with col3:
+        mood = st.selectbox("Mood", [
+            "calm", "gentle", "cozy", "happy", "curious"
+        ])
+
+    if st.button("🌟 Tell me a story!", type="primary", use_container_width=True):
+        with st.spinner("Creating your story..."):
+            options = StoryOptions(
+                length=length,
+                topic=topic,
+                mood=mood,
+                child_name=child_name
+            )
+            story = generate_story(options)
+            st.session_state["current_story"] = story
+            st.session_state["completed_storytime_today"] = True
+            st.session_state["storytime_count"] = st.session_state.get("storytime_count", 0) + 1
+            check_strength_unlocks()
+            st.rerun()
+
+    # Display story with TTS
     if st.session_state.get("current_story"):
         st.markdown("---")
-        st.markdown(f"""
-            <div class='lsr-story-box'>
-                {st.session_state["current_story"]}
-            </div>
-        """, unsafe_allow_html=True)
-
-        st.markdown("<br>", unsafe_allow_html=True)
-
-        # Text-to-speech button
-        if st.button("🔊 Read this story out loud", key="tts_story", use_container_width=True):
-            with st.spinner("🎤 Getting ready to read..."):
-                audio_bytes = synthesize_story_audio(st.session_state["current_story"])
-                if audio_bytes:
-                    st.audio(audio_bytes, format="audio/mp3")
+        render_read_aloud(
+            st.session_state["current_story"],
+            "Read the story aloud",
+            "current_story"
+        )
 
         st.markdown("<br>", unsafe_allow_html=True)
 
@@ -854,120 +994,104 @@ def show_storytime():
                 st.rerun()
 
 def show_star_facts():
-    """Star facts section"""
-    st.title("✨ Today's Little Star Facts")
-    st.markdown("### Tap a button to choose what kind of facts!")
+    """Updated star facts with GPT and TTS"""
+    st.markdown("### 🌟 Star Facts")
 
-    st.markdown("<br>", unsafe_allow_html=True)
+    topic = st.selectbox("What do you want to learn about?", [
+        "ocean animals", "space", "butterflies", "weather",
+        "trees", "birds", "dinosaurs", "rainbows", "stars"
+    ])
 
-    categories = [
-        {"name": "Space", "emoji": "⭐"},
-        {"name": "Animals", "emoji": "🐾"},
-        {"name": "Nature", "emoji": "🌱"},
-        {"name": "How Things Work", "emoji": "🧩"}
-    ]
-
-    cols = st.columns(2)
-    for i, category in enumerate(categories):
-        with cols[i % 2]:
-            if st.button(
-                f"{category['emoji']} {category['name']}",
-                use_container_width=True,
-                key=f"fact_{category['name']}"
-            ):
-                with st.spinner("🌟 Looking for amazing facts..."):
-                    facts = generate_facts(category['name'])
-                    st.session_state["current_facts"] = facts
-
-    if st.session_state.get("current_facts"):
-        st.markdown("---")
-        st.markdown(f"""
-            <div class='lsr-fact-box'>
-                {st.session_state["current_facts"]}
-            </div>
-        """, unsafe_allow_html=True)
-
-        st.markdown("<br>", unsafe_allow_html=True)
-        if st.button("✅ That's enough for today", use_container_width=True):
-            st.session_state["current_facts"] = None
-            st.session_state["child_page"] = "home"
+    if st.button("✨ Show me facts!", type="primary", use_container_width=True):
+        with st.spinner("Finding amazing facts..."):
+            facts = generate_star_facts(topic)
+            st.session_state["current_facts"] = {"topic": topic, "facts": facts}
             st.rerun()
 
-def show_feelings():
-    """Feelings & affirmations section"""
-    st.title("💖 Feelings & Stars")
-    st.markdown("### How are you feeling today?")
-
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    feelings = [
-        {"name": "Happy", "emoji": "😊", "key": "happy"},
-        {"name": "Sad", "emoji": "😢", "key": "sad"},
-        {"name": "Angry", "emoji": "😡", "key": "angry"},
-        {"name": "Worried", "emoji": "😰", "key": "worried"},
-        {"name": "Numb / I don't know", "emoji": "😶", "key": "numb"},
-        {"name": "Something else", "emoji": "🎨", "key": "other"}
-    ]
-
-    # Display feeling buttons in a grid
-    cols = st.columns(3)
-    selected_feeling = None
-
-    for i, feeling in enumerate(feelings):
-        with cols[i % 3]:
-            if st.button(
-                f"{feeling['emoji']}\n\n{feeling['name']}",
-                use_container_width=True,
-                key=f"feeling_{feeling['key']}"
-            ):
-                selected_feeling = feeling['key']
-
-    if selected_feeling:
+    # Display facts with TTS
+    if st.session_state.get("current_facts"):
         st.markdown("---")
+        st.markdown(f"**Amazing facts about {st.session_state['current_facts']['topic']}:**")
 
-        # Validation messages
-        validations = {
-            "happy": "It's wonderful that you're feeling happy! Your joy is special. 🌟",
-            "sad": "It's okay to feel sad. Lots of people feel sad sometimes. Your feelings are important.",
-            "angry": "It's okay to feel angry. All feelings are okay, even angry ones.",
-            "worried": "It makes sense to feel worried sometimes. Everyone worries. You're not alone.",
-            "numb": "Sometimes we don't know what we're feeling, and that's completely okay. You don't have to figure it all out right now.",
-            "other": "Whatever you're feeling is okay. All your feelings are important."
-        }
-
-        st.markdown(f"""
-            <div class='lsr-feeling-box'>
-                {validations[selected_feeling]}
-            </div>
-        """, unsafe_allow_html=True)
-
-        # Coping suggestion
-        coping = {
-            "happy": "Maybe you could draw a picture or do something fun to celebrate this feeling!",
-            "sad": "Maybe take 3 bunny breaths with me? Or you could tell a trusted grown-up how you're feeling.",
-            "angry": "Maybe take 3 deep breaths? Or you could squeeze your hands tight and then let go?",
-            "worried": "Maybe put your hand on your heart and take 3 slow breaths? You could also talk to a grown-up you trust.",
-            "numb": "Maybe just sit quietly for a moment? You don't have to do anything special right now.",
-            "other": "Maybe take a moment to just breathe? You could also tell someone how you're feeling."
-        }
-
-        st.markdown("**A tiny suggestion:**")
-        st.info(coping[selected_feeling])
-
-        # Affirmations
-        st.markdown("**Some things to remember:**")
-        feeling_affirmations = affirmations.get(selected_feeling, affirmations["other"])
-
-        for affirmation in feeling_affirmations:
-            st.markdown(f"✨ {affirmation}")
+        facts_text = ""
+        for i, fact in enumerate(st.session_state["current_facts"]["facts"], 1):
+            st.markdown(f"{i}. {fact}")
+            facts_text += f"{fact} "
 
         st.markdown("<br>", unsafe_allow_html=True)
+        render_read_aloud_simple(facts_text, "star_facts")
 
-        st.markdown("""
-            <div class='lsr-info-box'>
-                💫 Remember: You can always ask a grown-up for help. You don't have to do it all alone. 💫
-            </div>
-        """, unsafe_allow_html=True)
+def show_feelings():
+    """FEATURE 7: Updated feelings with emotion characters"""
+    child_name = profile.get("child_name", "Little Star")
+
+    st.markdown("### 💖 Feelings & Stars")
+
+    st.markdown("""
+        <div style='text-align: center; margin: 1rem 0;'>
+            <p style='font-size: 1.2rem;'>How are you feeling right now?</p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Emotion buttons with characters
+    col1, col2, col3 = st.columns(3)
+
+    feelings = ["happy", "sad", "angry", "worried", "scared", "numb", "something else"]
+
+    selected_feeling = None
+
+    for idx, feeling in enumerate(feelings):
+        col = [col1, col2, col3][idx % 3]
+        with col:
+            character = EMOTION_CHARACTERS[feeling]
+            if st.button(
+                f"{character['emoji']}\n\n{feeling.title()}\n({character['name']})",
+                use_container_width=True,
+                key=f"feeling_{feeling}"
+            ):
+                selected_feeling = feeling
+
+    if selected_feeling:
+        character = EMOTION_CHARACTERS[selected_feeling]
+
+        with st.spinner(f"{character['name']} is here..."):
+            response = generate_feelings_response(selected_feeling, character["name"])
+
+            st.markdown("---")
+
+            # Character intro
+            st.markdown(f"""
+                <div style='text-align: center; margin: 1rem 0;'>
+                    <p style='font-size: 2rem;'>{character['emoji']}</p>
+                    <p style='font-size: 1.3rem; color: #c2185b;'>
+                        {character['name']} is here
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
+
+            # Validation
+            render_read_aloud(response["validation"], "Read this", "feelings_validation")
+
+            # Suggestion
+            st.markdown(f"""
+                <div style='
+                    background: #ffe5f0;
+                    padding: 1rem;
+                    border-radius: 10px;
+                    border-left: 4px solid #ff85c0;
+                    margin: 1rem 0;
+                '>
+                    💡 {response['suggestion']}
+                </div>
+            """, unsafe_allow_html=True)
+
+            # Reminder
+            st.info(f"✨ {response['reminder']}")
+
+            # Track
+            st.session_state["selected_feeling_today"] = True
+            st.session_state["feelings_count"] = st.session_state.get("feelings_count", 0) + 1
+            check_strength_unlocks()
 
 def show_lessons():
     """Little lessons section"""
@@ -1052,6 +1176,9 @@ def show_calm_burrow():
                 <p>✨ <em>Well done! How do you feel now?</em> ✨</p>
             </div>
         """, unsafe_allow_html=True)
+
+        # Track achievement
+        st.session_state["did_bunny_breaths_today"] = True
 
         if st.button("Back to Calm Burrow", key="back_from_breaths"):
             del st.session_state["calm_activity"]
@@ -1286,6 +1413,308 @@ def show_calm_burrow():
                     st.session_state["timer_paused_at"] = None
                     st.session_state["child_page"] = "home"
                     st.rerun()
+
+# ============================================================================
+# NEW FEATURE PAGES
+# ============================================================================
+
+def show_ask_a_little_star():
+    """FEATURE 2: Wonder questions Q&A page"""
+    child_name = profile.get("child_name", "Little Star")
+
+    st.markdown("### ✨ Ask a Little Star")
+
+    st.markdown("""
+        <div style='
+            background: #fff0f5;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid #ffb6d9;
+            margin: 1rem 0;
+        '>
+            <p style='margin: 0;'>You can ask a wonder-question, like:</p>
+            <ul>
+                <li>"Why do people cry?"</li>
+                <li>"Do dogs have dreams?"</li>
+                <li>"Why is the sky blue?"</li>
+            </ul>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Wonder question suggestion
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        question = st.text_input("What do you wonder about?", placeholder="Type your question here...")
+    with col2:
+        st.markdown("<br>", unsafe_allow_html=True)
+        if st.button("✨ I need an idea"):
+            suggestion = generate_wonder_question_prompt()
+            st.session_state["wonder_suggestion"] = suggestion
+            st.rerun()
+
+    # Show suggestion if available
+    if st.session_state.get("wonder_suggestion"):
+        st.info(f"💡 Try asking: {st.session_state['wonder_suggestion']}")
+        if st.button("Use this question"):
+            question = st.session_state["wonder_suggestion"]
+            st.session_state["wonder_suggestion"] = None
+
+    if st.button("🌟 Answer my wonder!", type="primary", use_container_width=True):
+        if not question or len(question.strip()) < 3:
+            st.warning("🐇 Type a question first, then press the button!")
+        else:
+            with st.spinner("Thinking about your question..."):
+                answer = answer_wonder_question(question, child_name)
+
+                st.markdown("---")
+                st.markdown(f"**You asked:** {question}")
+
+                render_read_aloud(answer, "Read the answer", f"wonder_{hash(question)}")
+
+                # Track achievement
+                st.session_state["asked_wonder_question_today"] = True
+                st.session_state["questions_asked_count"] = st.session_state.get("questions_asked_count", 0) + 1
+                check_strength_unlocks()
+
+def show_little_wins():
+    """FEATURE 4: Little Wins tracker"""
+    st.markdown("### 🏅 Little Wins")
+
+    st.markdown("""
+        <div style='text-align: center; margin: 1rem 0;'>
+            <p style='font-size: 1.2rem; color: #c2185b;'>
+                These are things you've done today. No scores, no streaks - just gentle celebrations!
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    wins = []
+
+    if st.session_state.get("completed_storytime_today"):
+        wins.append("⭐ You enjoyed a story today")
+
+    if st.session_state.get("selected_feeling_today"):
+        wins.append("⭐ You noticed your feelings today")
+
+    if st.session_state.get("did_bunny_breaths_today"):
+        wins.append("⭐ You took some bunny breaths")
+
+    if st.session_state.get("asked_wonder_question_today"):
+        wins.append("⭐ You asked a wonder question")
+
+    if st.session_state.get("used_journal_today"):
+        wins.append("⭐ You shared your thoughts in the journal")
+
+    if st.session_state.get("used_routines_today"):
+        wins.append("⭐ You tried a Little Star Routine")
+
+    if wins:
+        for win in wins:
+            st.markdown(f"""
+                <div style='
+                    background: linear-gradient(135deg, #ffe5f0 0%, #fff0f5 100%);
+                    padding: 1rem;
+                    border-radius: 10px;
+                    border: 2px solid #ffb6d9;
+                    margin: 0.5rem 0;
+                    font-size: 1.3rem;
+                    text-align: center;
+                '>
+                    {win}
+                </div>
+            """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+            <div style='text-align: center; padding: 2rem;'>
+                <p style='font-size: 1.2rem; color: #c2185b;'>
+                    You haven't collected any wins yet today.<br>
+                    That's okay! Every moment is a fresh start. 💖
+                </p>
+            </div>
+        """, unsafe_allow_html=True)
+
+def show_secret_strengths():
+    """FEATURE 8: Secret Strengths constellation"""
+    st.markdown("### ⭐ Secret Strengths")
+
+    st.markdown("""
+        <div style='text-align: center; margin: 1rem 0 2rem 0;'>
+            <p style='font-size: 1.2rem; color: #c2185b;'>
+                These are special strengths you're discovering, one star at a time.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Define all strengths
+    strengths = {
+        "feelings_noticer": {
+            "title": "⭐ Feelings Noticer",
+            "description": "You pay attention to your feelings. That takes courage and care.",
+            "condition": "Use Feelings & Stars 3 times"
+        },
+        "curious_learner": {
+            "title": "⭐ Curious Learner",
+            "description": "You're curious about how things work. Your questions make the world more interesting.",
+            "condition": "Read 5 stories"
+        },
+        "wonder_seeker": {
+            "title": "⭐ Wonder Seeker",
+            "description": "You ask beautiful questions about the world. Keep wondering!",
+            "condition": "Ask 3 wonder questions"
+        },
+        "calm_finder": {
+            "title": "⭐ Calm Finder",
+            "description": "You know how to help your body feel calm. That's a powerful skill.",
+            "condition": "Use Calm Burrow 5 times"
+        },
+    }
+
+    unlocked = st.session_state.get("unlocked_strengths", set())
+
+    for strength_id, strength_info in strengths.items():
+        if strength_id in unlocked:
+            # Unlocked - show fully
+            st.markdown(f"""
+                <div style='
+                    background: linear-gradient(135deg, #ff85c0 0%, #ffb6d9 100%);
+                    color: white;
+                    padding: 1.5rem;
+                    border-radius: 15px;
+                    border: 3px solid #ff69b4;
+                    margin: 1rem 0;
+                    box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
+                '>
+                    <h3 style='color: white; margin: 0 0 0.5rem 0;'>{strength_info['title']}</h3>
+                    <p style='color: white; margin: 0; font-size: 1.1rem;'>{strength_info['description']}</p>
+                </div>
+            """, unsafe_allow_html=True)
+        else:
+            # Locked - show hint
+            st.markdown(f"""
+                <div style='
+                    background: rgba(255, 182, 217, 0.2);
+                    padding: 1.5rem;
+                    border-radius: 15px;
+                    border: 2px dashed #ffb6d9;
+                    margin: 1rem 0;
+                    opacity: 0.6;
+                '>
+                    <h3 style='margin: 0 0 0.5rem 0;'>🔒 ???</h3>
+                    <p style='margin: 0; font-size: 0.9rem; color: #999;'>{strength_info['condition']}</p>
+                </div>
+            """, unsafe_allow_html=True)
+
+def show_bunny_journal():
+    """FEATURE 5: Bunny Journal"""
+    child_name = profile.get("child_name", "Little Star")
+
+    st.markdown("### 📓 Bunny Journal")
+
+    st.markdown("""
+        <div style='text-align: center; margin: 1rem 0;'>
+            <p style='font-size: 1.2rem; color: #c2185b;'>
+                This is a safe place to share your thoughts, feelings, or drawings.
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Simple text journal
+    st.markdown("**Write or tell something about your day:**")
+    journal_text = st.text_area(
+        "Your thoughts...",
+        placeholder="You can write anything you want here. It's just for you.",
+        height=150,
+        label_visibility="collapsed"
+    )
+
+    # Drawing simulation (since we can't easily embed canvas)
+    st.markdown("**Or imagine drawing something:**")
+    st.info("🎨 Close your eyes and imagine drawing what you're feeling. What colors would you use? What shapes?")
+
+    if st.button("🐇 Share with the bunny", use_container_width=True, type="primary"):
+        if journal_text and len(journal_text.strip()) > 0:
+            st.markdown(f"""
+                <div style='
+                    background: linear-gradient(135deg, #ffe5f0 0%, #fff0f5 100%);
+                    padding: 2rem;
+                    border-radius: 15px;
+                    border: 3px solid #ffb6d9;
+                    text-align: center;
+                    margin: 1rem 0;
+                '>
+                    <p style='font-size: 1.3rem; color: #c2185b; margin: 0;'>
+                        Thank you for sharing your thoughts today, {child_name}.<br>
+                        It takes care to put things on the page. 💖
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
+
+            st.session_state["used_journal_today"] = True
+        else:
+            st.markdown(f"""
+                <div style='
+                    background: linear-gradient(135deg, #ffe5f0 0%, #fff0f5 100%);
+                    padding: 2rem;
+                    border-radius: 15px;
+                    border: 3px solid #ffb6d9;
+                    text-align: center;
+                    margin: 1rem 0;
+                '>
+                    <p style='font-size: 1.3rem; color: #c2185b; margin: 0;'>
+                        That's okay! Sometimes we just want to be quiet.<br>
+                        The bunny is here whenever you're ready. 🐇
+                    </p>
+                </div>
+            """, unsafe_allow_html=True)
+
+def show_star_routines():
+    """FEATURE 6: Little Star Routines"""
+    child_name = profile.get("child_name", "Little Star")
+
+    st.markdown("### 🌅 Little Star Routines")
+
+    st.markdown("""
+        <div style='text-align: center; margin: 1rem 0;'>
+            <p style='font-size: 1.2rem; color: #c2185b;'>
+                Tiny rituals for different parts of your day
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Three tabs for different times
+    tab1, tab2, tab3 = st.tabs(["🌅 Morning Sparkle", "🏫 After-School Pause", "🌙 Bedtime Glow"])
+
+    with tab1:
+        st.markdown("#### Morning Sparkle")
+        morning = generate_routine_content("morning", child_name)
+
+        st.markdown("**Tiny Stretch:**")
+        render_read_aloud(morning["stretch"], "Read stretch", "morning_stretch")
+
+        st.markdown("**Morning Thought:**")
+        render_read_aloud(morning["thought"], "Read thought", "morning_thought")
+
+    with tab2:
+        st.markdown("#### After-School Pause")
+        afterschool = generate_routine_content("afterschool", child_name)
+
+        st.markdown("**Three Bunny Breaths:**")
+        render_read_aloud(afterschool["breath"], "Read breaths", "afterschool_breath")
+
+        st.markdown("**Body Check:**")
+        render_read_aloud(afterschool["question"], "Read question", "afterschool_question")
+
+    with tab3:
+        st.markdown("#### Bedtime Glow")
+        bedtime = generate_routine_content("bedtime", child_name)
+
+        st.markdown("**Calm Script:**")
+        render_read_aloud(bedtime["script"], "Read script", "bedtime_script")
+
+        st.markdown("**Goodnight Reminder:**")
+        render_read_aloud(bedtime["reminder"], "Read reminder", "bedtime_reminder")
+
+    st.session_state["used_routines_today"] = True
 
 # ============================================================================
 # ADMIN MODE
