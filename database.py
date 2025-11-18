@@ -47,6 +47,7 @@ def init_database():
             CREATE TABLE IF NOT EXISTS journal_entries (
                 id SERIAL PRIMARY KEY,
                 profile_id INTEGER REFERENCES profiles(id),
+                title VARCHAR(200),
                 entry_text TEXT NOT NULL,
                 mood VARCHAR(50),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -205,7 +206,7 @@ def update_profile(profile_id, child_name=None, age=None, pronouns=None, interes
 # JOURNAL FUNCTIONS
 # ============================================================================
 
-def save_journal_entry(profile_id, entry_text, mood=None):
+def save_journal_entry(profile_id, entry_text, title=None, mood=None):
     """Save a journal entry"""
     conn = get_db_connection()
     if not conn:
@@ -214,9 +215,9 @@ def save_journal_entry(profile_id, entry_text, mood=None):
     try:
         cur = conn.cursor()
         cur.execute("""
-            INSERT INTO journal_entries (profile_id, entry_text, mood)
-            VALUES (%s, %s, %s)
-        """, (profile_id, entry_text, mood))
+            INSERT INTO journal_entries (profile_id, title, entry_text, mood)
+            VALUES (%s, %s, %s, %s)
+        """, (profile_id, title, entry_text, mood))
         conn.commit()
         cur.close()
         conn.close()
