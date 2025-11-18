@@ -307,7 +307,7 @@ def inject_css():
             font-family: "Patrick Hand", cursive !important;
         }
 
-        /* Hide the "Press Enter" instruction text from inputs */
+        /* Hide the "Press Enter" instruction text from inputs - COMPREHENSIVE */
         .stTextInput [data-testid="InputInstructions"],
         .stTextArea [data-testid="InputInstructions"],
         .stTextInput .instructions,
@@ -321,12 +321,26 @@ def inject_css():
         .stTextInput + div small,
         .stTextArea + div small,
         [class*="InputInstructions"],
-        [class*="stCaptionContainer"] small {
+        [class*="stCaptionContainer"] small,
+        .stTextInput > div > div > small,
+        .stTextArea > div > div > small,
+        .stTextInput div small,
+        .stTextArea div small,
+        div[data-baseweb="base-input"] ~ small,
+        div[data-baseweb="textarea"] ~ small,
+        [data-baseweb="base-input"] + small,
+        [data-baseweb="textarea"] + small,
+        .stTextInput p small,
+        .stTextArea p small {
             display: none !important;
             visibility: hidden !important;
             height: 0 !important;
+            width: 0 !important;
             margin: 0 !important;
             padding: 0 !important;
+            font-size: 0 !important;
+            line-height: 0 !important;
+            opacity: 0 !important;
         }
 
         /* Radio and checkboxes - Pink! */
@@ -1685,15 +1699,9 @@ def show_bunny_journal():
         </div>
     """, unsafe_allow_html=True)
 
-    # Toggle between writing new entry and viewing past entries
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("✏️ Write New Entry", use_container_width=True, type="primary" if not st.session_state.get('journal_viewing_mode') else "secondary"):
-            st.session_state['journal_viewing_mode'] = False
-            st.session_state['viewing_entry'] = None
-            st.rerun()
-    with col2:
-        if st.button("📖 Read Past Entries", use_container_width=True, type="primary" if st.session_state.get('journal_viewing_mode') else "secondary"):
+    # Button to view past entries (only show if not already in viewing mode)
+    if not st.session_state.get('journal_viewing_mode') and not st.session_state.get('viewing_entry'):
+        if st.button("📖 Read Past Entries", use_container_width=True):
             st.session_state['journal_viewing_mode'] = True
             st.session_state['viewing_entry'] = None
             st.rerun()
@@ -1763,18 +1771,28 @@ def show_bunny_journal():
                             st.session_state['viewing_entry'] = entry
                             st.rerun()
             else:
-                st.info("📖 No journal entries yet. Click 'Write New Entry' to start! ✨")
+                st.info("📖 No journal entries yet. Start writing to see them here! ✨")
         else:
             st.warning("Database not connected. Journal entries will appear here once saved!")
+
+        # Back button
+        if st.button("← Back to writing", use_container_width=True):
+            st.session_state['journal_viewing_mode'] = False
+            st.rerun()
 
         return
 
     # New entry form
+    # Use session state keys to clear inputs after saving
+    if 'journal_form_key' not in st.session_state:
+        st.session_state['journal_form_key'] = 0
+
     st.markdown("**Give your entry a title (optional):**")
     journal_title = st.text_input(
         "Title",
         placeholder="e.g., 'A happy day' or 'Things I'm thinking about'",
-        label_visibility="collapsed"
+        label_visibility="collapsed",
+        key=f"journal_title_{st.session_state['journal_form_key']}"
     )
 
     st.markdown("**Write or tell something about your day:**")
@@ -1782,7 +1800,8 @@ def show_bunny_journal():
         "Your thoughts...",
         placeholder="You can write anything you want here. It's just for you.",
         height=150,
-        label_visibility="collapsed"
+        label_visibility="collapsed",
+        key=f"journal_text_{st.session_state['journal_form_key']}"
     )
 
     # Drawing simulation (since we can't easily embed canvas)
@@ -1819,6 +1838,14 @@ def show_bunny_journal():
                 db.save_journal_entry(st.session_state['profile_id'], journal_text, title=journal_title)
                 db.track_activity(st.session_state['profile_id'], 'journal_entry')
                 st.success("✅ Journal entry saved!")
+
+            # Clear the form by incrementing the key
+            st.session_state['journal_form_key'] += 1
+
+            # Wait a moment then rerun to show cleared form
+            import time
+            time.sleep(1.5)
+            st.rerun()
         else:
             st.markdown(f"""
                 <div style='
