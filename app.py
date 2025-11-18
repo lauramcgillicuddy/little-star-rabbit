@@ -307,6 +307,28 @@ def inject_css():
             font-family: "Patrick Hand", cursive !important;
         }
 
+        /* Hide the "Press Enter" instruction text from inputs */
+        .stTextInput [data-testid="InputInstructions"],
+        .stTextArea [data-testid="InputInstructions"],
+        .stTextInput .instructions,
+        .stTextArea .instructions,
+        [data-testid="stTextInputInstructions"],
+        [data-testid="stTextAreaInstructions"],
+        .stTextInput small,
+        .stTextArea small,
+        .stTextInput div[data-testid="stCaptionContainer"],
+        .stTextArea div[data-testid="stCaptionContainer"],
+        .stTextInput + div small,
+        .stTextArea + div small,
+        [class*="InputInstructions"],
+        [class*="stCaptionContainer"] small {
+            display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
         /* Radio and checkboxes - Pink! */
         .stRadio > div {
             gap: 0.8rem;
@@ -1663,27 +1685,22 @@ def show_bunny_journal():
         </div>
     """, unsafe_allow_html=True)
 
-    # Sidebar for viewing past entries
-    with st.sidebar:
-        st.markdown("### 📖 Past Journal Entries")
+    # Toggle between writing new entry and viewing past entries
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("✏️ Write New Entry", use_container_width=True, type="primary" if not st.session_state.get('journal_viewing_mode') else "secondary"):
+            st.session_state['journal_viewing_mode'] = False
+            st.session_state['viewing_entry'] = None
+            st.rerun()
+    with col2:
+        if st.button("📖 Read Past Entries", use_container_width=True, type="primary" if st.session_state.get('journal_viewing_mode') else "secondary"):
+            st.session_state['journal_viewing_mode'] = True
+            st.session_state['viewing_entry'] = None
+            st.rerun()
 
-        if st.session_state.get('profile_id'):
-            past_entries = db.get_journal_entries(st.session_state['profile_id'], limit=20)
+    st.markdown("<br>", unsafe_allow_html=True)
 
-            if past_entries:
-                for entry in past_entries:
-                    entry_date = entry['created_at'].strftime('%b %d, %Y') if entry.get('created_at') else 'Unknown date'
-                    entry_title = entry.get('title') or f"Entry from {entry_date}"
-
-                    if st.button(f"📝 {entry_title}", key=f"entry_{entry['id']}", use_container_width=True):
-                        st.session_state['viewing_entry'] = entry
-                        st.rerun()
-            else:
-                st.info("No journal entries yet. Start writing! ✨")
-        else:
-            st.info("Journal entries will appear here once you start writing! 💖")
-
-    # Check if viewing a past entry
+    # Check if viewing a specific entry
     if st.session_state.get('viewing_entry'):
         entry = st.session_state['viewing_entry']
         entry_date = entry['created_at'].strftime('%B %d, %Y at %I:%M %p') if entry.get('created_at') else 'Unknown date'
@@ -1702,9 +1719,53 @@ def show_bunny_journal():
             </div>
         """, unsafe_allow_html=True)
 
-        if st.button("✏️ Write a new entry", use_container_width=True):
+        if st.button("← Back to all entries", use_container_width=True):
             st.session_state['viewing_entry'] = None
             st.rerun()
+
+        return
+
+    # Check if in viewing mode (showing list of entries)
+    if st.session_state.get('journal_viewing_mode'):
+        if st.session_state.get('profile_id'):
+            past_entries = db.get_journal_entries(st.session_state['profile_id'], limit=50)
+
+            if past_entries:
+                st.markdown("""
+                    <div style='text-align: center; margin: 1rem 0;'>
+                        <p style='font-size: 1.1rem; color: #c2185b;'>
+                            Click on any entry to read it 📖
+                        </p>
+                    </div>
+                """, unsafe_allow_html=True)
+
+                for entry in past_entries:
+                    entry_date = entry['created_at'].strftime('%B %d, %Y') if entry.get('created_at') else 'Unknown date'
+                    entry_title = entry.get('title') or f"Entry from {entry_date}"
+
+                    # Create a nice card for each entry
+                    col1, col2 = st.columns([4, 1])
+                    with col1:
+                        st.markdown(f"""
+                            <div style='
+                                background: linear-gradient(135deg, #fff0f5 0%, #ffe5f0 100%);
+                                padding: 1rem;
+                                border-radius: 10px;
+                                border: 2px solid #ffb6d9;
+                                margin: 0.5rem 0;
+                            '>
+                                <h4 style='color: #c2185b; margin: 0 0 0.3rem 0;'>📝 {entry_title}</h4>
+                                <p style='font-size: 0.9rem; color: #999; margin: 0;'>{entry_date}</p>
+                            </div>
+                        """, unsafe_allow_html=True)
+                    with col2:
+                        if st.button("Read", key=f"read_entry_{entry['id']}", use_container_width=True):
+                            st.session_state['viewing_entry'] = entry
+                            st.rerun()
+            else:
+                st.info("📖 No journal entries yet. Click 'Write New Entry' to start! ✨")
+        else:
+            st.warning("Database not connected. Journal entries will appear here once saved!")
 
         return
 
