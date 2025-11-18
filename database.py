@@ -113,6 +113,27 @@ def init_database():
             )
         """)
 
+        # Migration: Add title column to journal_entries if it doesn't exist
+        try:
+            cur.execute("""
+                ALTER TABLE journal_entries
+                ADD COLUMN IF NOT EXISTS title VARCHAR(200)
+            """)
+        except Exception:
+            # Column might already exist, that's ok
+            pass
+
+        # Migration: Add unique constraint to usage_tracking if it doesn't exist
+        try:
+            cur.execute("""
+                ALTER TABLE usage_tracking
+                ADD CONSTRAINT usage_tracking_profile_activity_unique
+                UNIQUE (profile_id, activity_type)
+            """)
+        except Exception:
+            # Constraint might already exist, that's ok
+            pass
+
         conn.commit()
         cur.close()
         conn.close()
