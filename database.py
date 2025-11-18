@@ -283,6 +283,28 @@ def get_journal_entries(profile_id, limit=10):
             conn.close()
         return []
 
+def delete_journal_entry(entry_id):
+    """Delete a journal entry by ID"""
+    conn = get_db_connection()
+    if not conn:
+        return False
+
+    try:
+        cur = conn.cursor()
+        cur.execute("""
+            DELETE FROM journal_entries
+            WHERE id = %s
+        """, (entry_id,))
+        conn.commit()
+        cur.close()
+        conn.close()
+        return True
+    except Exception as e:
+        st.error(f"Journal delete error: {str(e)}")
+        if conn:
+            conn.close()
+        return False
+
 # ============================================================================
 # WINS/ACHIEVEMENTS FUNCTIONS
 # ============================================================================

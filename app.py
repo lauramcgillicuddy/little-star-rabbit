@@ -1727,9 +1727,21 @@ def show_bunny_journal():
             </div>
         """, unsafe_allow_html=True)
 
-        if st.button("← Back to all entries", use_container_width=True):
-            st.session_state['viewing_entry'] = None
-            st.rerun()
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("← Back to all entries", use_container_width=True):
+                st.session_state['viewing_entry'] = None
+                st.rerun()
+        with col2:
+            if st.button("🗑️ Delete this entry", use_container_width=True, type="secondary"):
+                if db.delete_journal_entry(entry['id']):
+                    st.success("✅ Entry deleted!")
+                    st.session_state['viewing_entry'] = None
+                    import time
+                    time.sleep(1)
+                    st.rerun()
+                else:
+                    st.error("Failed to delete entry")
 
         return
 
@@ -1752,7 +1764,7 @@ def show_bunny_journal():
                     entry_title = entry.get('title') or f"Entry from {entry_date}"
 
                     # Create a nice card for each entry
-                    col1, col2 = st.columns([4, 1])
+                    col1, col2, col3 = st.columns([5, 1, 1])
                     with col1:
                         st.markdown(f"""
                             <div style='
@@ -1770,6 +1782,13 @@ def show_bunny_journal():
                         if st.button("Read", key=f"read_entry_{entry['id']}", use_container_width=True):
                             st.session_state['viewing_entry'] = entry
                             st.rerun()
+                    with col3:
+                        if st.button("🗑️", key=f"delete_entry_{entry['id']}", use_container_width=True, help="Delete this entry"):
+                            if db.delete_journal_entry(entry['id']):
+                                st.success("Deleted!")
+                                import time
+                                time.sleep(0.8)
+                                st.rerun()
             else:
                 st.info("📖 No journal entries yet. Start writing to see them here! ✨")
         else:
