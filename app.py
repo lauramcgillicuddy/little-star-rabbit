@@ -547,19 +547,35 @@ except Exception:
 
 # Initialize database
 try:
-    if 'database' in st.secrets:
-        db.init_database()
-        # Get or create profile_id for current user
-        if 'profile_id' not in st.session_state:
-            st.session_state['profile_id'] = db.create_or_get_profile(
-                child_name=profile['child_name'],
-                age=profile['age'],
-                pronouns=profile['pronouns'],
-                interests=profile['interests']
-            )
+    if 'database' in st.secrets and 'url' in st.secrets['database']:
+        # Initialize database tables
+        if db.init_database():
+            # Get or create profile_id for current user
+            if 'profile_id' not in st.session_state:
+                st.session_state['profile_id'] = db.create_or_get_profile(
+                    child_name=profile['child_name'],
+                    age=profile['age'],
+                    pronouns=profile['pronouns'],
+                    interests=profile['interests']
+                )
+            # Mark database as connected
+            if 'profile_id' not in st.session_state or st.session_state.get('profile_id') is None:
+                st.session_state['db_connected'] = False
+            else:
+                st.session_state['db_connected'] = True
+        else:
+            st.session_state['profile_id'] = None
+            st.session_state['db_connected'] = False
+    else:
+        # Database not configured - app will work with session state only
+        st.session_state['profile_id'] = None
+        st.session_state['db_connected'] = False
 except Exception as e:
-    # Database not configured - app will work with session state only
+    # Database error - app will work with session state only
     st.session_state['profile_id'] = None
+    st.session_state['db_connected'] = False
+    # Uncomment for debugging:
+    # st.error(f"Database initialization error: {str(e)}")
 
 def save_profile():
     save_json(PROFILE_FILE, profile)
@@ -1647,7 +1663,59 @@ def show_bunny_journal():
         </div>
     """, unsafe_allow_html=True)
 
-    # Simple text journal
+    # Sidebar for viewing past entries
+    with st.sidebar:
+        st.markdown("### 📖 Past Journal Entries")
+
+        if st.session_state.get('profile_id'):
+            past_entries = db.get_journal_entries(st.session_state['profile_id'], limit=20)
+
+            if past_entries:
+                for entry in past_entries:
+                    entry_date = entry['created_at'].strftime('%b %d, %Y') if entry.get('created_at') else 'Unknown date'
+                    entry_title = entry.get('title') or f"Entry from {entry_date}"
+
+                    if st.button(f"📝 {entry_title}", key=f"entry_{entry['id']}", use_container_width=True):
+                        st.session_state['viewing_entry'] = entry
+                        st.rerun()
+            else:
+                st.info("No journal entries yet. Start writing! ✨")
+        else:
+            st.info("Journal entries will appear here once you start writing! 💖")
+
+    # Check if viewing a past entry
+    if st.session_state.get('viewing_entry'):
+        entry = st.session_state['viewing_entry']
+        entry_date = entry['created_at'].strftime('%B %d, %Y at %I:%M %p') if entry.get('created_at') else 'Unknown date'
+
+        st.markdown(f"""
+            <div style='
+                background: linear-gradient(135deg, #ffe5f0 0%, #fff0f5 100%);
+                padding: 1.5rem;
+                border-radius: 15px;
+                border: 3px solid #ffb6d9;
+                margin: 1rem 0;
+            '>
+                <h3 style='color: #c2185b; margin: 0 0 0.5rem 0;'>{entry.get('title') or 'Journal Entry'}</h3>
+                <p style='font-size: 0.9rem; color: #999; margin: 0 0 1rem 0;'>{entry_date}</p>
+                <p style='font-size: 1.1rem; white-space: pre-wrap;'>{entry['entry_text']}</p>
+            </div>
+        """, unsafe_allow_html=True)
+
+        if st.button("✏️ Write a new entry", use_container_width=True):
+            st.session_state['viewing_entry'] = None
+            st.rerun()
+
+        return
+
+    # New entry form
+    st.markdown("**Give your entry a title (optional):**")
+    journal_title = st.text_input(
+        "Title",
+        placeholder="e.g., 'A happy day' or 'Things I'm thinking about'",
+        label_visibility="collapsed"
+    )
+
     st.markdown("**Write or tell something about your day:**")
     journal_text = st.text_area(
         "Your thoughts...",
@@ -1662,6 +1730,11 @@ def show_bunny_journal():
 
     if st.button("🐇 Share with the bunny", use_container_width=True, type="primary"):
         if journal_text and len(journal_text.strip()) > 0:
+            # Generate a default title if none provided
+            if not journal_title or len(journal_title.strip()) == 0:
+                from datetime import datetime
+                journal_title = f"My thoughts on {datetime.now().strftime('%B %d')}"
+
             st.markdown(f"""
                 <div style='
                     background: linear-gradient(135deg, #ffe5f0 0%, #fff0f5 100%);
@@ -1682,8 +1755,9 @@ def show_bunny_journal():
 
             # Save to database if configured
             if st.session_state.get('profile_id'):
-                db.save_journal_entry(st.session_state['profile_id'], journal_text)
+                db.save_journal_entry(st.session_state['profile_id'], journal_text, title=journal_title)
                 db.track_activity(st.session_state['profile_id'], 'journal_entry')
+                st.success("✅ Journal entry saved!")
         else:
             st.markdown(f"""
                 <div style='
@@ -1770,6 +1844,12 @@ def show_admin_mode():
             st.session_state["admin_authenticated"] = False
             st.session_state["mode"] = "landing"
             st.rerun()
+
+    # Database connection status
+    if st.session_state.get('db_connected'):
+        st.success("✅ Database connected - all data is being saved to Neon PostgreSQL")
+    else:
+        st.warning("⚠️ Database not connected - data will only persist in browser session")
 
     st.markdown("---")
 
