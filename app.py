@@ -19,6 +19,7 @@ from gpt_utils import (
     generate_wonder_question_prompt, generate_routine_content, StoryOptions
 )
 from tts_utils import render_read_aloud, render_read_aloud_simple, text_to_speech
+import database as db
 
 # Page config
 st.set_page_config(
@@ -544,6 +545,22 @@ except Exception:
     # Secrets not available (local development) - use JSON files only
     pass
 
+# Initialize database
+try:
+    if 'database' in st.secrets:
+        db.init_database()
+        # Get or create profile_id for current user
+        if 'profile_id' not in st.session_state:
+            st.session_state['profile_id'] = db.create_or_get_profile(
+                child_name=profile['child_name'],
+                age=profile['age'],
+                pronouns=profile['pronouns'],
+                interests=profile['interests']
+            )
+except Exception as e:
+    # Database not configured - app will work with session state only
+    st.session_state['profile_id'] = None
+
 def save_profile():
     save_json(PROFILE_FILE, profile)
 
@@ -733,25 +750,32 @@ def get_daily_affirmation():
 
     return st.session_state["daily_affirmation"]
 
-def unlock_strength(strength_id: str):
+def unlock_strength(strength_id: str, strength_name: str = None):
     """Unlock a secret strength"""
     if "unlocked_strengths" not in st.session_state:
         st.session_state["unlocked_strengths"] = set()
-    st.session_state["unlocked_strengths"].add(strength_id)
+
+    # Only add if not already unlocked
+    if strength_id not in st.session_state["unlocked_strengths"]:
+        st.session_state["unlocked_strengths"].add(strength_id)
+
+        # Save to database if configured
+        if st.session_state.get('profile_id') and strength_name:
+            db.unlock_strength(st.session_state['profile_id'], strength_id, strength_name)
 
 def check_strength_unlocks():
     """Check if any new strengths should be unlocked"""
     # Notice feelings
     if st.session_state.get("feelings_count", 0) >= 3:
-        unlock_strength("feelings_noticer")
+        unlock_strength("feelings_noticer", "Feelings Noticer")
 
     # Curious learner
     if st.session_state.get("storytime_count", 0) >= 5:
-        unlock_strength("curious_learner")
+        unlock_strength("curious_learner", "Curious Learner")
 
     # Wonder seeker
     if st.session_state.get("questions_asked_count", 0) >= 3:
-        unlock_strength("wonder_seeker")
+        unlock_strength("wonder_seeker", "Wonder Seeker")
 
 # Emotion character mapping
 EMOTION_CHARACTERS = {
@@ -962,6 +986,12 @@ def show_storytime():
             st.session_state["current_story"] = story
             st.session_state["completed_storytime_today"] = True
             st.session_state["storytime_count"] = st.session_state.get("storytime_count", 0) + 1
+
+            # Save story to database if configured
+            if st.session_state.get('profile_id'):
+                db.save_story(st.session_state['profile_id'], story, length, topic, mood)
+                db.track_activity(st.session_state['profile_id'], 'story_generated')
+
             check_strength_unlocks()
             st.rerun()
 
@@ -1085,6 +1115,11 @@ def show_feelings():
             # Track
             st.session_state["selected_feeling_today"] = True
             st.session_state["feelings_count"] = st.session_state.get("feelings_count", 0) + 1
+
+            # Track in database if configured
+            if st.session_state.get('profile_id'):
+                db.track_activity(st.session_state['profile_id'], f'feeling_{selected_feeling}')
+
             check_strength_unlocks()
 
 def show_lessons():
@@ -1644,6 +1679,11 @@ def show_bunny_journal():
             """, unsafe_allow_html=True)
 
             st.session_state["used_journal_today"] = True
+
+            # Save to database if configured
+            if st.session_state.get('profile_id'):
+                db.save_journal_entry(st.session_state['profile_id'], journal_text)
+                db.track_activity(st.session_state['profile_id'], 'journal_entry')
         else:
             st.markdown(f"""
                 <div style='
