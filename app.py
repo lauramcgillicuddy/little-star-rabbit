@@ -31,280 +31,89 @@ st.set_page_config(
 
 # Custom CSS styling
 def inject_css():
-    """Inject custom CSS for adorable pink handwritten theme"""
+    import streamlit as st
+
     st.markdown(
         """
         <style>
-        /* --- IMPORT CUTE HANDWRITTEN FONTS --- */
-        @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Covered+By+Your+Grace&family=Indie+Flower&family=Caveat:wght@400;700&display=swap');
-
-        /* --- GLOBAL FONT OVERRIDES - Super Cute Handwritten! --- */
-        .stApp, .block-container, .stMarkdown, .stText, .stTextInput, .stNumberInput,
-        .stRadio, .stSelectbox, .stTextarea, .stCheckbox, .stButton > button,
-        .stTabs [data-baseweb="tab"], label, p, div {
-            font-family: "Patrick Hand", "Indie Flower", cursive, sans-serif;
-            font-size: 1.45rem;
-        }
-
-        /* Ensure all text is visible and bigger */
-        p, span, div, label, .stMarkdown {
-            color: #4a1942;
-            font-size: 1.45rem;
-        }
-
-        /* Use extra cute handwritten for helper text */
-        .lsr-note {
-            font-family: "Covered By Your Grace", "Patrick Hand", cursive;
-            font-size: 1.35rem;
-        }
-
-        /* Background + layout - Super Pink and Magical! */
+        /* Split pastel background */
         .stApp {
-            background:
-                radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(255, 192, 203, 0.3) 0%, transparent 50%),
-                linear-gradient(180deg, #ffb6d9 0%, #ffd4e5 30%, #ffe5f0 60%, #fff0f5 100%);
-            color: #4a1942;
+            background: linear-gradient(
+                to bottom,
+                #FDECF5 0%,
+                #FDECF5 50%,
+                #C8D8FF 50%,
+                #C8D8FF 100%
+            );
         }
 
-        /* Cute floating doodles */
-        .cute-doodle {
-            position: fixed;
-            font-size: 2rem;
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: 0;
-            animation: gentle-float 8s ease-in-out infinite;
-        }
-
-        @keyframes gentle-float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(5deg); }
-        }
-
-        .block-container {
-            padding-top: 3rem;
-            padding-bottom: 3rem;
+        /* Content centering */
+        section.main > div {
             max-width: 900px;
+            margin: 0 auto;
+            padding-top: 1.5rem;
+            padding-bottom: 2.5rem;
         }
 
-        #MainMenu, footer {visibility: hidden;}
-        header {visibility: hidden;}
-
-        /* Titles - Big and Playful! */
-        h1, h2, h3, .lsr-hero-title {
-            font-family: "Caveat", "Patrick Hand", cursive;
-            letter-spacing: 0.02em;
-            color: #d5006d !important;
-            text-shadow: 2px 2px 4px rgba(255, 182, 193, 0.4);
-        }
-        h1 {
-            font-size: 3.05rem;
-            font-weight: 700;
-        }
-        h2 {
-            font-size: 2.45rem;
-            font-weight: 700;
-        }
-        h3 {
-            font-size: 2.05rem;
-            font-weight: 600;
-        }
-        .lsr-hero-title {
-            font-size: 3.75rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 0.5rem;
-            color: #d5006d !important;
-        }
-        .lsr-hero-subtitle {
-            text-align: center;
-            font-size: 1.55rem;
-            color: #c2185b !important;
-            margin-bottom: 2.2rem;
-            font-family: "Covered By Your Grace", "Patrick Hand", cursive;
+        /* Global font */
+        html, body, [class*="css"] {
+            font-family: "Baloo 2", system-ui, sans-serif;
+            color: #3A2640;
         }
 
-        /* Landing page buttons - Cute but not too big! */
-        .lsr-cta-row {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 1rem;
-            margin-bottom: 2rem;
-        }
-        .lsr-cta-main {
-            border-radius: 1.5rem;
-            padding: 0.7rem 1.8rem;
-            border: 2px solid #ff69b4;
-            font-weight: 600;
-            font-size: 1.3rem;
-            cursor: pointer;
-            box-shadow: 0 6px 16px rgba(255, 105, 180, 0.3);
-            background: linear-gradient(135deg, #ff85c0, #ffb6d9);
-            color: #fff;
-            transition: transform 0.2s ease;
-        }
-        .lsr-cta-main:hover {
-            transform: scale(1.03) rotate(-1deg);
-        }
-        .lsr-cta-secondary {
-            border-radius: 1.5rem;
-            padding: 0.7rem 1.8rem;
-            border: 2px solid #ffb6d9;
-            background: #fff;
-            font-weight: 500;
-            font-size: 1.3rem;
-            cursor: pointer;
-            color: #c2185b;
-            box-shadow: 0 5px 12px rgba(255, 182, 193, 0.25);
-            transition: transform 0.2s ease;
-        }
-        .lsr-cta-secondary:hover {
-            transform: scale(1.03) rotate(1deg);
+        /* Headers */
+        h1, h2, h3 {
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-weight: 800;
         }
 
-        /* Tabs - Cute and Pink! */
-        .stTabs [data-baseweb="tab"] {
-            font-size: 1.35rem;
-            font-weight: 600;
-            padding: 0.8rem 1.2rem;
-            border-radius: 1rem 1rem 0 0;
-            font-family: "Patrick Hand", cursive;
-        }
-        .stTabs [data-baseweb="tab-list"] {
-            gap: 0.5rem;
+        /* Card style */
+        .lsr-card {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 24px;
+            padding: 1.4rem 1.6rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+            border: 2px solid rgba(255, 255, 255, 0.9);
         }
 
-        /* Child hub card buttons - Super Cute Cards! */
-        div[data-testid="stButton"] > button {
-            border-radius: 2rem;
-            padding: 2rem 1.8rem;
-            background: linear-gradient(145deg, #fff, #ffe5f0);
-            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.3);
-            border: 3px solid #ffb6d9;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: normal;
-            height: auto;
-            min-height: 180px;
-            color: #4a1942 !important;
-            font-size: 1.35rem;
-        }
-        div[data-testid="stButton"] > button:hover {
-            transform: translateY(-6px) rotate(-1deg);
-            box-shadow: 0 15px 40px rgba(255, 105, 180, 0.5);
-            border-color: #ff85c0;
-        }
-
-        .lsr-card-icon {
-            font-size: 3.25rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-        .lsr-card-title {
-            font-size: 1.65rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            display: block;
-            color: #d5006d;
-        }
-        .lsr-card-sub {
-            font-size: 1.3rem;
-            color: #c2185b;
-            font-family: "Covered By Your Grace", "Patrick Hand", cursive;
-            display: block;
-            line-height: 1.5;
-        }
-
-        /* Story box - Super Cute! */
-        .lsr-story-box {
-            border-radius: 2rem;
-            padding: 2rem 2.2rem;
-            background: linear-gradient(135deg, #fff 0%, #ffe5f0 100%);
-            border: 3px solid #ffb6d9;
-            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.3);
-            line-height: 1.8;
-            font-size: 1.4rem;
-        }
-
-        /* Fact box - Sparkly! */
-        .lsr-fact-box {
-            border-radius: 2rem;
-            padding: 2rem 2.2rem;
-            background: linear-gradient(135deg, #ffffed 0%, #fff8dc 100%);
-            border: 3px solid #ffd700;
-            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
-            line-height: 1.8;
-            font-size: 1.4rem;
-        }
-
-        /* Feeling boxes - Extra Pink! */
-        .lsr-feeling-box {
-            border-radius: 1.8rem;
-            padding: 1.8rem 2rem;
-            background: linear-gradient(135deg, #ffe5f0 0%, #ffd4e5 100%);
-            border: 3px solid #ff85c0;
-            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
-            margin-bottom: 1.5rem;
-            font-size: 1.4rem;
-        }
-
-        .lsr-info-box {
-            border-radius: 1.8rem;
-            padding: 1.5rem 1.8rem;
-            background: linear-gradient(135deg, #fff0f5 0%, #ffe5f0 100%);
-            border: 3px solid #ffb6d9;
-            margin: 1rem 0;
-            color: #c2185b;
-            text-align: center;
-            font-size: 1.35rem;
-        }
-
-        /* Regular buttons (non-card) - Cute and not too big! */
-        .stButton > button[kind="primary"] {
-            background: linear-gradient(135deg, #ff85c0, #ffb6d9);
-            color: white;
+        /* Buttons */
+        .stButton > button {
+            border-radius: 18px;
+            padding: 0.6rem 1.2rem;
             border: none;
-            border-radius: 1.5rem;
-            font-size: 1.25rem;
-            padding: 0.6rem 1.4rem;
+            background: #F6A5C0;
+            color: #3A2640;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+        .stButton > button:hover {
+            background: #FBC4D9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.10);
         }
 
-        .stButton > button:not([data-testid]) {
-            border-radius: 1.5rem;
-            font-weight: 500;
-            padding: 0.6rem 1.4rem;
-            border: 2px solid #ffb6d9;
-            transition: all 0.2s ease;
-            color: #4a1942 !important;
-            background-color: #ffffff;
-            font-size: 1.25rem;
+        /* Widget tiles */
+        .lsr-widget-tile {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 0.8rem 0.9rem;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+            border: 1px solid rgba(255, 255, 255, 0.95);
         }
 
-        .stButton > button:not([data-testid]):hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.35);
-            border-color: #ff85c0;
-        }
-
-        /* Streamlit widgets - Cute! */
-        .stRadio > label, .stSelectbox > label, .stTextInput > label,
-        .stNumberInput > label, .stTextarea > label {
+        /* Tabs */
+        .stTabs [role="tab"] {
+            border-radius: 999px;
+            padding: 0.4rem 1.2rem;
             font-weight: 600;
-            color: #c2185b;
-            font-size: 1.1rem;
         }
-
-        /* Input fields - Pink borders! */
-        input, textarea, select {
-            border-radius: 1rem !important;
-            border: 2px solid #ffb6d9 !important;
-            font-family: "Patrick Hand", cursive !important;
+        .stTabs [role="tab"][aria-selected="true"] {
+            background: #F6A5C0;
+            color: #3A2640;
         }
 
         /* Hide the "Press Enter" instruction text from inputs - COMPREHENSIVE */
@@ -343,19 +152,13 @@ def inject_css():
             opacity: 0 !important;
         }
 
-        /* Radio and checkboxes - Pink! */
-        .stRadio > div {
-            gap: 0.8rem;
-        }
+        /* Hide menu and footer */
+        #MainMenu, footer {visibility: hidden;}
+        header {visibility: hidden;}
 
         /* Ensure sidebar is visible */
         section[data-testid="stSidebar"] {
             visibility: visible !important;
-        }
-
-        /* Add cute hover effects everywhere! */
-        .stSelectbox:hover, .stTextInput:hover, .stNumberInput:hover {
-            transform: scale(1.01);
         }
         </style>
         """,

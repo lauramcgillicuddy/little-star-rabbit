@@ -1,8 +1,8 @@
 [theme]
-primaryColor = "#F27D90"            # warm strawberry
-backgroundColor = "#FFF4EA"         # soft cream
-secondaryBackgroundColor = "#FFE0EF" # light pink panels
-textColor = "#2B102A"               # deep plum
+primaryColor = "#F6A5C0"            # pastel pink
+backgroundColor = "#FDECF5"         # very soft pink
+secondaryBackgroundColor = "#C8D8FF" # soft lilac
+textColor = "#3A2640"               # plum
 font = "sans serif"
 
 [server]
