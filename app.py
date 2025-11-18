@@ -39,14 +39,16 @@ def inject_css():
         /* Import adorable handwritten fonts - tea party vibes! */
         @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Patrick+Hand&family=Delius:wght@400&display=swap');
 
-        /* Soft pink-purple gradient background with cream polka dots */
+        /* Soft pink-purple gradient background with cream AND transparent cream polka dots */
         .stApp {
             background:
+                radial-gradient(circle, rgba(255, 251, 245, 0.4) 12px, transparent 12px),
+                radial-gradient(circle, rgba(255, 249, 240, 0.3) 12px, transparent 12px),
                 radial-gradient(circle, #FFFBF5 10px, transparent 10px),
                 radial-gradient(circle, #FFF9F0 10px, transparent 10px),
                 linear-gradient(135deg, #FFD4E5 0%, #E8C5E5 50%, #D4B5E8 100%) !important;
-            background-size: 60px 60px, 60px 60px, 100% 100%;
-            background-position: 0 0, 30px 30px, 0 0;
+            background-size: 90px 90px, 90px 90px, 60px 60px, 60px 60px, 100% 100%;
+            background-position: 0 0, 45px 45px, 0 0, 30px 30px, 0 0;
         }
 
         /* Tea party decorations at the top */
@@ -111,22 +113,43 @@ def inject_css():
         h2 { font-size: 3.2rem !important; }
         h3 { font-size: 2.6rem !important; }
 
-        /* Flat pastel buttons - BIGGER and centered */
+        /* Flat pastel buttons - BIGGER and centered with lace-edge cream card behind */
         .stButton {
             display: flex !important;
             justify-content: center !important;
+            position: relative !important;
         }
+
+        /* Cream lace-edged rectangle behind buttons */
+        .stButton::before {
+            content: '' !important;
+            position: absolute !important;
+            top: -15px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            width: calc(100% + 80px) !important;
+            height: calc(100% + 30px) !important;
+            background: #FFFCF7 !important;
+            border-radius: 20px !important;
+            border: 4px solid #E8C5E5 !important;
+            box-shadow:
+                0 0 0 8px #FFFCF7,
+                0 0 0 12px #FFD4E5 !important;
+            z-index: -1 !important;
+        }
+
         .stButton > button {
             border-radius: 25px !important;
-            padding: 1rem 3rem !important;
+            padding: 0.9rem 2.5rem !important;
             border: 4px solid #9B6B9E !important;
             background: #E8C5E5 !important;
             color: #6B4C7A !important;
             font-weight: 700 !important;
             box-shadow: none !important;
-            font-size: 1.3rem !important;
+            font-size: 1.15rem !important;
             transition: all 0.2s ease !important;
             text-transform: lowercase;
+            white-space: nowrap !important;
         }
         .stButton > button:hover {
             background: #FFD4E5 !important;
@@ -155,13 +178,28 @@ def inject_css():
             outline: none !important;
         }
 
-        /* Flat selectboxes - BIGGER */
+        /* Flat selectboxes - fixed font size */
         .stSelectbox > div > div {
             border-radius: 18px !important;
             border: 4px solid #E8C5E5 !important;
             background: #FFFAF7 !important;
             box-shadow: none !important;
-            font-size: 1.2rem !important;
+        }
+
+        /* Fix dropdown menu font size and display */
+        .stSelectbox div[data-baseweb="select"] > div {
+            font-size: 1rem !important;
+            padding: 0.7rem !important;
+        }
+
+        /* Fix dropdown options menu */
+        div[role="listbox"] {
+            font-size: 1rem !important;
+        }
+
+        div[role="option"] {
+            font-size: 1rem !important;
+            padding: 0.8rem 1rem !important;
         }
 
         /* Flat tea party tabs - BIGGER and centered */
