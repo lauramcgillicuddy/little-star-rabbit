@@ -36,6 +36,9 @@ def inject_css():
     st.markdown(
         """
         <style>
+        /* Import Baloo 2 font */
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
+
         /* Split pastel background */
         .stApp {
             background: linear-gradient(
@@ -44,7 +47,7 @@ def inject_css():
                 #FDECF5 50%,
                 #C8D8FF 50%,
                 #C8D8FF 100%
-            );
+            ) !important;
         }
 
         /* Content centering */
@@ -56,16 +59,17 @@ def inject_css():
         }
 
         /* Global font */
-        html, body, [class*="css"] {
-            font-family: "Baloo 2", system-ui, sans-serif;
-            color: #3A2640;
+        html, body, [class*="css"], * {
+            font-family: "Baloo 2", system-ui, sans-serif !important;
+            color: #3A2640 !important;
         }
 
         /* Headers */
         h1, h2, h3 {
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            font-weight: 800;
+            letter-spacing: 0.08em !important;
+            text-transform: uppercase !important;
+            font-weight: 800 !important;
+            color: #3A2640 !important;
         }
 
         /* Card style */
@@ -79,18 +83,18 @@ def inject_css():
 
         /* Buttons */
         .stButton > button {
-            border-radius: 18px;
-            padding: 0.6rem 1.2rem;
-            border: none;
-            background: #F6A5C0;
-            color: #3A2640;
-            font-weight: 700;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            border-radius: 18px !important;
+            padding: 0.6rem 1.2rem !important;
+            border: none !important;
+            background: #F6A5C0 !important;
+            color: #3A2640 !important;
+            font-weight: 700 !important;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08) !important;
         }
         .stButton > button:hover {
-            background: #FBC4D9;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 14px rgba(0,0,0,0.10);
+            background: #FBC4D9 !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.10) !important;
         }
 
         /* Widget tiles */
@@ -107,13 +111,13 @@ def inject_css():
 
         /* Tabs */
         .stTabs [role="tab"] {
-            border-radius: 999px;
-            padding: 0.4rem 1.2rem;
-            font-weight: 600;
+            border-radius: 999px !important;
+            padding: 0.4rem 1.2rem !important;
+            font-weight: 600 !important;
         }
         .stTabs [role="tab"][aria-selected="true"] {
-            background: #F6A5C0;
-            color: #3A2640;
+            background: #F6A5C0 !important;
+            color: #3A2640 !important;
         }
 
         /* Hide the "Press Enter" instruction text from inputs - COMPREHENSIVE */
