@@ -36,158 +36,143 @@ def inject_css():
     st.markdown(
         """
         <style>
-        /* Import super cute, bubbly fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600&family=Nunito:wght@400;600;700&display=swap');
+        /* Import adorable handwritten fonts - tea party vibes! */
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Patrick+Hand&family=Comic+Neue:wght@400;700&display=swap');
 
-        /* Dreamy pastel background with subtle sparkles */
+        /* Flat pastel background with polka dots - like a tea party tablecloth! */
         .stApp {
-            background:
-                radial-gradient(circle at 20% 30%, rgba(255, 182, 217, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(200, 216, 255, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
-                linear-gradient(135deg, #FFF5F9 0%, #F8F0FF 100%) !important;
-            background-size: 100% 100%, 100% 100%, 20px 20px, 100% 100% !important;
-            background-position: 0 0, 0 0, 0 0, 0 0 !important;
-            background-attachment: fixed !important;
+            background-color: #FFF4F0 !important;
+            background-image:
+                radial-gradient(circle, #E8C5E5 8px, transparent 8px),
+                radial-gradient(circle, #FFD4E5 8px, transparent 8px);
+            background-size: 80px 80px;
+            background-position: 0 0, 40px 40px;
         }
 
-        /* Gentle floating sparkles at top */
+        /* Tea party decorations at the top */
         .stApp::before {
-            content: "✨ 🌸 ⭐ 💕 🌈 ⭐ 🌸 ✨";
+            content: "🫖 ☕ 🧁 🌸 💜 🌸 🧁 ☕ 🫖";
             position: fixed;
-            top: 10px;
+            top: 15px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
-            font-size: 1.3rem;
-            opacity: 0.25;
+            font-size: 1.5rem;
+            opacity: 0.3;
             pointer-events: none;
-            letter-spacing: 2rem;
+            letter-spacing: 1.5rem;
             z-index: 0;
-            animation: gentleFloat 6s ease-in-out infinite;
         }
 
-        @keyframes gentleFloat {
-            0%, 100% { transform: translateX(-50%) translateY(0px); }
-            50% { transform: translateX(-50%) translateY(-8px); }
-        }
-
-        /* Content area - soft and spacious */
+        /* Cozy content area */
         section.main > div {
-            max-width: 850px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 2.5rem 1.5rem 3rem 1.5rem;
+            padding: 3rem 2rem;
         }
 
-        /* Adorable, readable fonts */
-        html, body, [class*="css"], *, p, span, div, label, input, textarea {
-            font-family: "Nunito", "Fredoka", system-ui, sans-serif !important;
-            color: #5A4A6A !important;
+        /* Handwritten, playful fonts */
+        html, body, [class*="css"], p, span, div, label, input, textarea {
+            font-family: "Comic Neue", "Patrick Hand", cursive !important;
+            color: #6B4C7A !important;
         }
 
-        /* Sweet, bubbly headers */
+        /* Sweet handwritten headers */
         h1, h2, h3 {
-            font-family: "Fredoka", cursive !important;
-            letter-spacing: 0.02em !important;
-            font-weight: 500 !important;
-            color: #D67AB0 !important;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8), 0 0 15px rgba(214, 122, 176, 0.1);
-            margin-bottom: 1rem !important;
+            font-family: "Caveat", cursive !important;
+            font-weight: 700 !important;
+            color: #9B6B9E !important;
+            text-shadow: none !important;
+            margin-bottom: 1.2rem !important;
         }
 
-        h1 { font-size: 2.2rem !important; }
-        h2 { font-size: 1.8rem !important; }
-        h3 { font-size: 1.4rem !important; }
+        h1 { font-size: 3rem !important; }
+        h2 { font-size: 2.5rem !important; }
+        h3 { font-size: 2rem !important; }
 
-        /* Soft, bubbly buttons */
+        /* Flat pastel buttons - no gradients! */
         .stButton > button {
-            border-radius: 30px !important;
-            padding: 0.75rem 2rem !important;
-            border: none !important;
-            background: linear-gradient(135deg, #FFB6D9 0%, #DBA4F5 100%) !important;
-            color: white !important;
-            font-weight: 600 !important;
-            box-shadow: 0 4px 15px rgba(255, 182, 217, 0.4), inset 0 -2px 10px rgba(219, 164, 245, 0.3) !important;
-            font-size: 1rem !important;
-            transition: all 0.3s ease !important;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            border-radius: 20px !important;
+            padding: 0.8rem 2rem !important;
+            border: 3px solid #9B6B9E !important;
+            background: #E8C5E5 !important;
+            color: #6B4C7A !important;
+            font-weight: 700 !important;
+            box-shadow: none !important;
+            font-size: 1.1rem !important;
+            transition: all 0.2s ease !important;
+            text-transform: lowercase;
         }
         .stButton > button:hover {
-            background: linear-gradient(135deg, #FFC4E5 0%, #E5B5FF 100%) !important;
-            transform: translateY(-2px) !important;
-            box-shadow: 0 6px 20px rgba(255, 182, 217, 0.5), inset 0 -2px 10px rgba(219, 164, 245, 0.4) !important;
+            background: #FFD4E5 !important;
+            border-color: #B88BB5 !important;
+            transform: scale(1.05) !important;
         }
         .stButton > button:active {
-            transform: translateY(0px) !important;
+            transform: scale(0.98) !important;
         }
 
-        /* Soft cloud-like input fields */
+        /* Flat cream input fields */
         input, textarea, select {
-            border-radius: 18px !important;
-            border: 2px solid rgba(255, 182, 217, 0.3) !important;
-            background: rgba(255, 255, 255, 0.9) !important;
-            padding: 0.85rem 1rem !important;
-            font-size: 1rem !important;
-            box-shadow: inset 0 2px 8px rgba(214, 122, 176, 0.08) !important;
-            transition: all 0.3s ease !important;
+            border-radius: 15px !important;
+            border: 3px solid #E8C5E5 !important;
+            background: #FFFAF7 !important;
+            padding: 0.9rem !important;
+            font-size: 1.05rem !important;
+            box-shadow: none !important;
+            transition: all 0.2s ease !important;
         }
         input:focus, textarea:focus, select:focus {
-            border-color: #FFB6D9 !important;
-            background: white !important;
-            box-shadow: 0 0 0 4px rgba(255, 182, 217, 0.15), inset 0 2px 8px rgba(214, 122, 176, 0.1) !important;
+            border-color: #9B6B9E !important;
+            background: #FFFFFF !important;
+            box-shadow: none !important;
             outline: none !important;
         }
 
-        /* Bubble-style cards and containers */
-        [data-testid="stVerticalBlock"] > div {
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 20px;
-            padding: 1.2rem;
-            box-shadow: 0 4px 20px rgba(214, 122, 176, 0.08);
-        }
-
-        /* Pretty selectboxes */
+        /* Flat selectboxes */
         .stSelectbox > div > div {
-            border-radius: 18px !important;
-            border: 2px solid rgba(255, 182, 217, 0.3) !important;
-            background: rgba(255, 255, 255, 0.9) !important;
+            border-radius: 15px !important;
+            border: 3px solid #E8C5E5 !important;
+            background: #FFFAF7 !important;
+            box-shadow: none !important;
         }
 
-        /* Cute bubble tabs */
+        /* Flat tea party tabs */
         .stTabs {
             background: transparent !important;
         }
         .stTabs [role="tablist"] {
-            gap: 0.5rem;
+            gap: 0.8rem;
             border: none !important;
         }
         .stTabs [role="tab"] {
-            border-radius: 25px !important;
+            border-radius: 20px !important;
             padding: 0.7rem 1.8rem !important;
-            font-weight: 600 !important;
-            border: none !important;
-            font-size: 0.95rem !important;
-            transition: all 0.3s ease !important;
-            background: rgba(255, 255, 255, 0.7) !important;
-            color: #9B7BA8 !important;
+            font-weight: 700 !important;
+            border: 3px solid #E8C5E5 !important;
+            font-size: 1rem !important;
+            transition: all 0.2s ease !important;
+            background: #FFFAF7 !important;
+            color: #9B6B9E !important;
+            box-shadow: none !important;
         }
         .stTabs [role="tab"][aria-selected="true"] {
-            background: linear-gradient(135deg, #FFB6D9 0%, #DBA4F5 100%) !important;
-            color: white !important;
-            box-shadow: 0 3px 12px rgba(255, 182, 217, 0.4) !important;
-            transform: translateY(-2px);
+            background: #E8C5E5 !important;
+            color: #6B4C7A !important;
+            border-color: #9B6B9E !important;
+            transform: none !important;
         }
         .stTabs [role="tab"]:hover:not([aria-selected="true"]) {
-            background: rgba(255, 255, 255, 0.95) !important;
-            color: #D67AB0 !important;
+            background: #FFD4E5 !important;
+            border-color: #B88BB5 !important;
         }
 
-        /* Sweet info/success boxes */
+        /* Flat pastel alert boxes */
         .stAlert, [data-testid="stAlert"] {
-            border-radius: 18px !important;
-            border: none !important;
-            background: linear-gradient(135deg, rgba(255, 182, 217, 0.15) 0%, rgba(219, 164, 245, 0.15) 100%) !important;
-            box-shadow: 0 4px 15px rgba(214, 122, 176, 0.1) !important;
+            border-radius: 15px !important;
+            border: 3px solid #FFD4E5 !important;
+            background: #FFF9FC !important;
+            box-shadow: none !important;
         }
 
         /* Hide instructional text */
@@ -205,32 +190,30 @@ def inject_css():
         /* Clean interface */
         #MainMenu, footer, header {visibility: hidden;}
 
-        /* Magical sidebar */
+        /* Flat pastel sidebar */
         section[data-testid="stSidebar"] {
-            background: linear-gradient(180deg,
-                rgba(255, 245, 249, 0.95) 0%,
-                rgba(248, 240, 255, 0.95) 100%) !important;
-            border-right: none !important;
-            box-shadow: 3px 0 15px rgba(214, 122, 176, 0.08) !important;
+            background: #FFF9FC !important;
+            border-right: 4px solid #E8C5E5 !important;
+            box-shadow: none !important;
         }
         section[data-testid="stSidebar"] > div {
             padding-top: 2rem !important;
         }
 
-        /* Smooth scrollbar */
+        /* Simple flat scrollbar */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 12px;
         }
         ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
+            background: #FFFAF7;
         }
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #FFB6D9 0%, #DBA4F5 100%);
+            background: #E8C5E5;
             border-radius: 10px;
+            border: 2px solid #FFFAF7;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #FFC4E5 0%, #E5B5FF 100%);
+            background: #B88BB5;
         }
         </style>
         """,
