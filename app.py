@@ -37,69 +37,94 @@ def inject_css():
         """
         <style>
         /* Import adorable handwritten fonts - tea party vibes! */
-        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Patrick+Hand&family=Comic+Neue:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Patrick+Hand&family=Delius:wght@400&display=swap');
 
-        /* Flat pastel background with polka dots - like a tea party tablecloth! */
+        /* Soft pink-purple gradient background with cream polka dots */
         .stApp {
-            background-color: #FFF4F0 !important;
-            background-image:
-                radial-gradient(circle, #E8C5E5 8px, transparent 8px),
-                radial-gradient(circle, #FFD4E5 8px, transparent 8px);
-            background-size: 80px 80px;
-            background-position: 0 0, 40px 40px;
+            background:
+                radial-gradient(circle, #FFFBF5 10px, transparent 10px),
+                radial-gradient(circle, #FFF9F0 10px, transparent 10px),
+                linear-gradient(135deg, #FFD4E5 0%, #E8C5E5 50%, #D4B5E8 100%) !important;
+            background-size: 60px 60px, 60px 60px, 100% 100%;
+            background-position: 0 0, 30px 30px, 0 0;
         }
 
         /* Tea party decorations at the top */
         .stApp::before {
             content: "🫖 ☕ 🧁 🌸 💜 🌸 🧁 ☕ 🫖";
             position: fixed;
-            top: 15px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
-            font-size: 1.5rem;
-            opacity: 0.3;
+            font-size: 1.8rem;
+            opacity: 0.4;
             pointer-events: none;
-            letter-spacing: 1.5rem;
+            letter-spacing: 2rem;
             z-index: 0;
         }
 
-        /* Cozy content area */
+        /* Cream card with scalloped edge effect */
         section.main > div {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
+            max-width: 950px;
+            margin: 4rem auto !important;
+            padding: 0 !important;
+            background: #FFFCF7 !important;
+            border-radius: 20px !important;
+            border: 5px solid #E8C5E5 !important;
+            box-shadow:
+                0 0 0 10px #FFFCF7,
+                0 0 0 15px #FFD4E5,
+                inset 0 0 50px rgba(232, 197, 229, 0.2) !important;
+            position: relative;
         }
 
-        /* Handwritten, playful fonts */
+        /* Add padding back to inner content */
+        section.main > div > div {
+            padding: 3rem 3rem !important;
+        }
+
+        /* Center everything */
+        .stMarkdown, .stButton, .stTextInput, .stTextArea, .stSelectbox {
+            text-align: center !important;
+        }
+
+        /* Handwritten, playful fonts - BIGGER and more legible */
         html, body, [class*="css"], p, span, div, label, input, textarea {
-            font-family: "Comic Neue", "Patrick Hand", cursive !important;
+            font-family: "Delius", "Patrick Hand", cursive !important;
             color: #6B4C7A !important;
+            font-size: 1.2rem !important;
+            line-height: 1.8 !important;
         }
 
-        /* Sweet handwritten headers */
+        /* Sweet handwritten headers - BIGGER */
         h1, h2, h3 {
             font-family: "Caveat", cursive !important;
             font-weight: 700 !important;
             color: #9B6B9E !important;
             text-shadow: none !important;
-            margin-bottom: 1.2rem !important;
+            margin-bottom: 1.5rem !important;
+            text-align: center !important;
         }
 
-        h1 { font-size: 3rem !important; }
-        h2 { font-size: 2.5rem !important; }
-        h3 { font-size: 2rem !important; }
+        h1 { font-size: 4rem !important; }
+        h2 { font-size: 3.2rem !important; }
+        h3 { font-size: 2.6rem !important; }
 
-        /* Flat pastel buttons - no gradients! */
+        /* Flat pastel buttons - BIGGER and centered */
+        .stButton {
+            display: flex !important;
+            justify-content: center !important;
+        }
         .stButton > button {
-            border-radius: 20px !important;
-            padding: 0.8rem 2rem !important;
-            border: 3px solid #9B6B9E !important;
+            border-radius: 25px !important;
+            padding: 1rem 3rem !important;
+            border: 4px solid #9B6B9E !important;
             background: #E8C5E5 !important;
             color: #6B4C7A !important;
             font-weight: 700 !important;
             box-shadow: none !important;
-            font-size: 1.1rem !important;
+            font-size: 1.3rem !important;
             transition: all 0.2s ease !important;
             text-transform: lowercase;
         }
@@ -112,15 +137,16 @@ def inject_css():
             transform: scale(0.98) !important;
         }
 
-        /* Flat cream input fields */
+        /* Flat cream input fields - BIGGER */
         input, textarea, select {
-            border-radius: 15px !important;
-            border: 3px solid #E8C5E5 !important;
+            border-radius: 18px !important;
+            border: 4px solid #E8C5E5 !important;
             background: #FFFAF7 !important;
-            padding: 0.9rem !important;
-            font-size: 1.05rem !important;
+            padding: 1rem 1.2rem !important;
+            font-size: 1.2rem !important;
             box-shadow: none !important;
             transition: all 0.2s ease !important;
+            text-align: center !important;
         }
         input:focus, textarea:focus, select:focus {
             border-color: #9B6B9E !important;
@@ -129,28 +155,30 @@ def inject_css():
             outline: none !important;
         }
 
-        /* Flat selectboxes */
+        /* Flat selectboxes - BIGGER */
         .stSelectbox > div > div {
-            border-radius: 15px !important;
-            border: 3px solid #E8C5E5 !important;
+            border-radius: 18px !important;
+            border: 4px solid #E8C5E5 !important;
             background: #FFFAF7 !important;
             box-shadow: none !important;
+            font-size: 1.2rem !important;
         }
 
-        /* Flat tea party tabs */
+        /* Flat tea party tabs - BIGGER and centered */
         .stTabs {
             background: transparent !important;
         }
         .stTabs [role="tablist"] {
-            gap: 0.8rem;
+            gap: 1rem;
             border: none !important;
+            justify-content: center !important;
         }
         .stTabs [role="tab"] {
-            border-radius: 20px !important;
-            padding: 0.7rem 1.8rem !important;
+            border-radius: 25px !important;
+            padding: 1rem 2.5rem !important;
             font-weight: 700 !important;
-            border: 3px solid #E8C5E5 !important;
-            font-size: 1rem !important;
+            border: 4px solid #E8C5E5 !important;
+            font-size: 1.3rem !important;
             transition: all 0.2s ease !important;
             background: #FFFAF7 !important;
             color: #9B6B9E !important;
@@ -167,12 +195,14 @@ def inject_css():
             border-color: #B88BB5 !important;
         }
 
-        /* Flat pastel alert boxes */
+        /* Flat pastel alert boxes - BIGGER */
         .stAlert, [data-testid="stAlert"] {
-            border-radius: 15px !important;
-            border: 3px solid #FFD4E5 !important;
+            border-radius: 20px !important;
+            border: 4px solid #FFD4E5 !important;
             background: #FFF9FC !important;
             box-shadow: none !important;
+            font-size: 1.2rem !important;
+            padding: 1.2rem !important;
         }
 
         /* Hide instructional text */
@@ -190,14 +220,24 @@ def inject_css():
         /* Clean interface */
         #MainMenu, footer, header {visibility: hidden;}
 
-        /* Flat pastel sidebar */
+        /* Flat pastel sidebar with cream card */
         section[data-testid="stSidebar"] {
-            background: #FFF9FC !important;
-            border-right: 4px solid #E8C5E5 !important;
+            background:
+                radial-gradient(circle, #FFFBF5 8px, transparent 8px),
+                radial-gradient(circle, #FFF9F0 8px, transparent 8px),
+                linear-gradient(135deg, #FFD4E5 0%, #E8C5E5 50%, #D4B5E8 100%) !important;
+            background-size: 50px 50px, 50px 50px, 100% 100%;
+            background-position: 0 0, 25px 25px, 0 0;
+            border-right: 5px solid #E8C5E5 !important;
             box-shadow: none !important;
         }
         section[data-testid="stSidebar"] > div {
             padding-top: 2rem !important;
+            background: #FFFCF7;
+            border-radius: 15px;
+            margin: 1rem;
+            padding: 2rem !important;
+            border: 4px solid #E8C5E5;
         }
 
         /* Simple flat scrollbar */
