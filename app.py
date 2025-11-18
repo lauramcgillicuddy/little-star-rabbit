@@ -206,18 +206,6 @@ def scroll_to_top():
         height=0,
     )
 
-# Add cute doodles to the page
-def add_cute_doodles():
-    """Add cute floating doodles to the background"""
-    st.markdown("""
-        <div class="cute-doodle" style="top: 10%; right: 8%;">💕</div>
-        <div class="cute-doodle" style="top: 25%; left: 5%; animation-delay: 1s;">⭐</div>
-        <div class="cute-doodle" style="top: 60%; right: 12%; animation-delay: 2s;">✨</div>
-        <div class="cute-doodle" style="top: 80%; left: 15%; animation-delay: 3s;">🌸</div>
-        <div class="cute-doodle" style="top: 45%; left: 90%; animation-delay: 1.5s;">🦋</div>
-        <div class="cute-doodle" style="top: 70%; right: 85%; animation-delay: 2.5s;">🌈</div>
-    """, unsafe_allow_html=True)
-
 # Data directory setup
 DATA_DIR = Path("data")
 DATA_DIR.mkdir(exist_ok=True)
@@ -2167,9 +2155,6 @@ def main():
 
     # Inject custom CSS for beautiful starry theme
     inject_css()
-
-    # Add cute floating doodles
-    add_cute_doodles()
 
     # Route to appropriate mode
     if st.session_state["mode"] == "landing":
