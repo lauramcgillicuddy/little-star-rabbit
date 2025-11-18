@@ -113,29 +113,11 @@ def inject_css():
         h2 { font-size: 3.2rem !important; }
         h3 { font-size: 2.6rem !important; }
 
-        /* Flat pastel buttons - BIGGER and centered with lace-edge cream card behind */
+        /* Flat pastel buttons - BIGGER and centered */
         .stButton {
             display: flex !important;
             justify-content: center !important;
-            position: relative !important;
-        }
-
-        /* Cream lace-edged rectangle behind buttons */
-        .stButton::before {
-            content: '' !important;
-            position: absolute !important;
-            top: -15px !important;
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-            width: calc(100% + 80px) !important;
-            height: calc(100% + 30px) !important;
-            background: #FFFCF7 !important;
-            border-radius: 20px !important;
-            border: 4px solid #E8C5E5 !important;
-            box-shadow:
-                0 0 0 8px #FFFCF7,
-                0 0 0 12px #FFD4E5 !important;
-            z-index: -1 !important;
+            margin: 0.8rem 0 !important;
         }
 
         .stButton > button {
