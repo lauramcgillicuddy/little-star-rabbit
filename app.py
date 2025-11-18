@@ -36,129 +36,161 @@ def inject_css():
     st.markdown(
         """
         <style>
-        /* Import cute fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Fredoka:wght@300;400;500;600;700&display=swap');
+        /* Import super cute, bubbly fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600&family=Nunito:wght@400;600;700&display=swap');
 
-        /* Split pastel background with polka dots */
+        /* Dreamy pastel background with subtle sparkles */
         .stApp {
             background:
-                radial-gradient(circle, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
-                radial-gradient(circle, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
-                linear-gradient(
-                    to bottom,
-                    #FDECF5 0%,
-                    #FDECF5 50%,
-                    #C8D8FF 50%,
-                    #C8D8FF 100%
-                ) !important;
-            background-size: 30px 30px, 30px 30px, 100% 100% !important;
-            background-position: 0 0, 15px 15px, 0 0 !important;
+                radial-gradient(circle at 20% 30%, rgba(255, 182, 217, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(200, 216, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+                linear-gradient(135deg, #FFF5F9 0%, #F8F0FF 100%) !important;
+            background-size: 100% 100%, 100% 100%, 20px 20px, 100% 100% !important;
+            background-position: 0 0, 0 0, 0 0, 0 0 !important;
+            background-attachment: fixed !important;
         }
 
-        /* Floating doodles */
+        /* Gentle floating sparkles at top */
         .stApp::before {
-            content: "⭐ 🌙 ✨ 💫 🌟 ⭐ 🌈 ✨";
+            content: "✨ 🌸 ⭐ 💕 🌈 ⭐ 🌸 ✨";
             position: fixed;
-            top: 20px;
-            left: 0;
-            right: 0;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
             text-align: center;
-            font-size: 2rem;
-            opacity: 0.15;
+            font-size: 1.3rem;
+            opacity: 0.25;
             pointer-events: none;
-            letter-spacing: 3rem;
+            letter-spacing: 2rem;
             z-index: 0;
+            animation: gentleFloat 6s ease-in-out infinite;
         }
 
-        /* Content centering */
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateX(-50%) translateY(0px); }
+            50% { transform: translateX(-50%) translateY(-8px); }
+        }
+
+        /* Content area - soft and spacious */
         section.main > div {
-            max-width: 900px;
+            max-width: 850px;
             margin: 0 auto;
-            padding-top: 2rem;
-            padding-bottom: 3rem;
+            padding: 2.5rem 1.5rem 3rem 1.5rem;
         }
 
-        /* Global font - super readable and cute */
-        html, body, [class*="css"], *, p, span, div, label {
-            font-family: "Fredoka", "Baloo 2", system-ui, sans-serif !important;
-            color: #3A2640 !important;
+        /* Adorable, readable fonts */
+        html, body, [class*="css"], *, p, span, div, label, input, textarea {
+            font-family: "Nunito", "Fredoka", system-ui, sans-serif !important;
+            color: #5A4A6A !important;
         }
 
-        /* Headers - playful but readable */
+        /* Sweet, bubbly headers */
         h1, h2, h3 {
-            font-family: "Baloo 2", cursive !important;
-            letter-spacing: 0.05em !important;
-            font-weight: 700 !important;
-            color: #D63384 !important;
-            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.5);
+            font-family: "Fredoka", cursive !important;
+            letter-spacing: 0.02em !important;
+            font-weight: 500 !important;
+            color: #D67AB0 !important;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8), 0 0 15px rgba(214, 122, 176, 0.1);
+            margin-bottom: 1rem !important;
         }
 
-        h1 { font-size: 2.5rem !important; }
-        h2 { font-size: 2rem !important; }
-        h3 { font-size: 1.6rem !important; }
+        h1 { font-size: 2.2rem !important; }
+        h2 { font-size: 1.8rem !important; }
+        h3 { font-size: 1.4rem !important; }
 
-        /* Buttons - super cute rounded style */
+        /* Soft, bubbly buttons */
         .stButton > button {
-            border-radius: 25px !important;
-            padding: 0.8rem 1.5rem !important;
-            border: 3px solid #FFB6D9 !important;
-            background: linear-gradient(135deg, #F6A5C0 0%, #FFC4E1 100%) !important;
+            border-radius: 30px !important;
+            padding: 0.75rem 2rem !important;
+            border: none !important;
+            background: linear-gradient(135deg, #FFB6D9 0%, #DBA4F5 100%) !important;
             color: white !important;
-            font-weight: 700 !important;
-            box-shadow: 0 6px 20px rgba(246, 165, 192, 0.3) !important;
-            font-size: 1.1rem !important;
-            transition: all 0.2s ease !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 15px rgba(255, 182, 217, 0.4), inset 0 -2px 10px rgba(219, 164, 245, 0.3) !important;
+            font-size: 1rem !important;
+            transition: all 0.3s ease !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
         .stButton > button:hover {
-            background: linear-gradient(135deg, #FFC4E1 0%, #F6A5C0 100%) !important;
-            transform: translateY(-3px) rotate(-1deg) !important;
-            box-shadow: 0 8px 25px rgba(246, 165, 192, 0.4) !important;
+            background: linear-gradient(135deg, #FFC4E5 0%, #E5B5FF 100%) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(255, 182, 217, 0.5), inset 0 -2px 10px rgba(219, 164, 245, 0.4) !important;
+        }
+        .stButton > button:active {
+            transform: translateY(0px) !important;
         }
 
-        /* Input fields - rounded and cute */
+        /* Soft cloud-like input fields */
         input, textarea, select {
-            border-radius: 15px !important;
-            border: 2px solid #F6A5C0 !important;
-            background: white !important;
-            padding: 0.8rem !important;
+            border-radius: 18px !important;
+            border: 2px solid rgba(255, 182, 217, 0.3) !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            padding: 0.85rem 1rem !important;
             font-size: 1rem !important;
+            box-shadow: inset 0 2px 8px rgba(214, 122, 176, 0.08) !important;
+            transition: all 0.3s ease !important;
         }
         input:focus, textarea:focus, select:focus {
-            border-color: #D63384 !important;
-            box-shadow: 0 0 0 3px rgba(246, 165, 192, 0.2) !important;
+            border-color: #FFB6D9 !important;
+            background: white !important;
+            box-shadow: 0 0 0 4px rgba(255, 182, 217, 0.15), inset 0 2px 8px rgba(214, 122, 176, 0.1) !important;
+            outline: none !important;
         }
 
-        /* Selectbox and other widgets */
+        /* Bubble-style cards and containers */
+        [data-testid="stVerticalBlock"] > div {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            padding: 1.2rem;
+            box-shadow: 0 4px 20px rgba(214, 122, 176, 0.08);
+        }
+
+        /* Pretty selectboxes */
         .stSelectbox > div > div {
-            border-radius: 15px !important;
-            border: 2px solid #F6A5C0 !important;
+            border-radius: 18px !important;
+            border: 2px solid rgba(255, 182, 217, 0.3) !important;
+            background: rgba(255, 255, 255, 0.9) !important;
         }
 
-        /* Tabs - rounded pills */
+        /* Cute bubble tabs */
+        .stTabs {
+            background: transparent !important;
+        }
+        .stTabs [role="tablist"] {
+            gap: 0.5rem;
+            border: none !important;
+        }
         .stTabs [role="tab"] {
-            border-radius: 20px !important;
-            padding: 0.6rem 1.5rem !important;
+            border-radius: 25px !important;
+            padding: 0.7rem 1.8rem !important;
             font-weight: 600 !important;
-            border: 2px solid transparent !important;
-            font-size: 1rem !important;
+            border: none !important;
+            font-size: 0.95rem !important;
+            transition: all 0.3s ease !important;
+            background: rgba(255, 255, 255, 0.7) !important;
+            color: #9B7BA8 !important;
         }
         .stTabs [role="tab"][aria-selected="true"] {
-            background: linear-gradient(135deg, #F6A5C0 0%, #FFC4E1 100%) !important;
+            background: linear-gradient(135deg, #FFB6D9 0%, #DBA4F5 100%) !important;
             color: white !important;
-            border: 2px solid #FFB6D9 !important;
+            box-shadow: 0 3px 12px rgba(255, 182, 217, 0.4) !important;
+            transform: translateY(-2px);
         }
-        .stTabs [role="tab"]:not([aria-selected="true"]) {
-            background: rgba(255, 255, 255, 0.7) !important;
-            color: #D63384 !important;
+        .stTabs [role="tab"]:hover:not([aria-selected="true"]) {
+            background: rgba(255, 255, 255, 0.95) !important;
+            color: #D67AB0 !important;
         }
 
-        /* Info/success/warning boxes - cute rounded */
+        /* Sweet info/success boxes */
         .stAlert, [data-testid="stAlert"] {
-            border-radius: 15px !important;
-            border-left: 5px solid #F6A5C0 !important;
+            border-radius: 18px !important;
+            border: none !important;
+            background: linear-gradient(135deg, rgba(255, 182, 217, 0.15) 0%, rgba(219, 164, 245, 0.15) 100%) !important;
+            box-shadow: 0 4px 15px rgba(214, 122, 176, 0.1) !important;
         }
 
-        /* Hide the "Press Enter" instruction text from inputs */
+        /* Hide instructional text */
         .stTextInput [data-testid="InputInstructions"],
         .stTextArea [data-testid="InputInstructions"],
         .stTextInput small,
@@ -170,17 +202,35 @@ def inject_css():
             visibility: hidden !important;
         }
 
-        /* Hide menu and footer */
-        #MainMenu, footer {visibility: hidden;}
-        header {visibility: hidden;}
+        /* Clean interface */
+        #MainMenu, footer, header {visibility: hidden;}
 
-        /* Sidebar styling */
+        /* Magical sidebar */
         section[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #FDECF5 0%, #E8D4F5 100%) !important;
-            border-right: 3px solid rgba(246, 165, 192, 0.3) !important;
+            background: linear-gradient(180deg,
+                rgba(255, 245, 249, 0.95) 0%,
+                rgba(248, 240, 255, 0.95) 100%) !important;
+            border-right: none !important;
+            box-shadow: 3px 0 15px rgba(214, 122, 176, 0.08) !important;
         }
         section[data-testid="stSidebar"] > div {
             padding-top: 2rem !important;
+        }
+
+        /* Smooth scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #FFB6D9 0%, #DBA4F5 100%);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #FFC4E5 0%, #E5B5FF 100%);
         }
         </style>
         """,
