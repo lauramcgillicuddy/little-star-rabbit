@@ -307,6 +307,16 @@ def inject_css():
             font-family: "Patrick Hand", cursive !important;
         }
 
+        /* Hide the "Press Enter" instruction text from inputs */
+        .stTextInput [data-testid="InputInstructions"],
+        .stTextArea [data-testid="InputInstructions"],
+        .stTextInput .instructions,
+        .stTextArea .instructions,
+        [data-testid="stTextInputInstructions"],
+        [data-testid="stTextAreaInstructions"] {
+            display: none !important;
+        }
+
         /* Radio and checkboxes - Pink! */
         .stRadio > div {
             gap: 0.8rem;
