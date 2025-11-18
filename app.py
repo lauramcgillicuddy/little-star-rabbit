@@ -958,13 +958,7 @@ def show_storytime():
 
     if st.button("🌟 Tell me a story!", type="primary", use_container_width=True):
         with st.spinner("Creating your story..."):
-            options = StoryOptions(
-                length=length,
-                topic=topic,
-                mood=mood,
-                child_name=child_name
-            )
-            story = generate_story(options)
+            story = generate_story(length, topic, mood)
             st.session_state["current_story"] = story
             st.session_state["completed_storytime_today"] = True
             st.session_state["storytime_count"] = st.session_state.get("storytime_count", 0) + 1
