@@ -36,133 +36,151 @@ def inject_css():
     st.markdown(
         """
         <style>
-        /* Import Baloo 2 font */
-        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&display=swap');
+        /* Import cute fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Fredoka:wght@300;400;500;600;700&display=swap');
 
-        /* Split pastel background */
+        /* Split pastel background with polka dots */
         .stApp {
-            background: linear-gradient(
-                to bottom,
-                #FDECF5 0%,
-                #FDECF5 50%,
-                #C8D8FF 50%,
-                #C8D8FF 100%
-            ) !important;
+            background:
+                radial-gradient(circle, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+                radial-gradient(circle, rgba(255, 255, 255, 0.3) 1px, transparent 1px),
+                linear-gradient(
+                    to bottom,
+                    #FDECF5 0%,
+                    #FDECF5 50%,
+                    #C8D8FF 50%,
+                    #C8D8FF 100%
+                ) !important;
+            background-size: 30px 30px, 30px 30px, 100% 100% !important;
+            background-position: 0 0, 15px 15px, 0 0 !important;
+        }
+
+        /* Floating doodles */
+        .stApp::before {
+            content: "⭐ 🌙 ✨ 💫 🌟 ⭐ 🌈 ✨";
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 2rem;
+            opacity: 0.15;
+            pointer-events: none;
+            letter-spacing: 3rem;
+            z-index: 0;
         }
 
         /* Content centering */
         section.main > div {
             max-width: 900px;
             margin: 0 auto;
-            padding-top: 1.5rem;
-            padding-bottom: 2.5rem;
+            padding-top: 2rem;
+            padding-bottom: 3rem;
         }
 
-        /* Global font */
-        html, body, [class*="css"], * {
-            font-family: "Baloo 2", system-ui, sans-serif !important;
+        /* Global font - super readable and cute */
+        html, body, [class*="css"], *, p, span, div, label {
+            font-family: "Fredoka", "Baloo 2", system-ui, sans-serif !important;
             color: #3A2640 !important;
         }
 
-        /* Headers */
+        /* Headers - playful but readable */
         h1, h2, h3 {
-            letter-spacing: 0.08em !important;
-            text-transform: uppercase !important;
-            font-weight: 800 !important;
-            color: #3A2640 !important;
-        }
-
-        /* Card style */
-        .lsr-card {
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 24px;
-            padding: 1.4rem 1.6rem;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.06);
-            border: 2px solid rgba(255, 255, 255, 0.9);
-        }
-
-        /* Buttons */
-        .stButton > button {
-            border-radius: 18px !important;
-            padding: 0.6rem 1.2rem !important;
-            border: none !important;
-            background: #F6A5C0 !important;
-            color: #3A2640 !important;
+            font-family: "Baloo 2", cursive !important;
+            letter-spacing: 0.05em !important;
             font-weight: 700 !important;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08) !important;
+            color: #D63384 !important;
+            text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.5);
+        }
+
+        h1 { font-size: 2.5rem !important; }
+        h2 { font-size: 2rem !important; }
+        h3 { font-size: 1.6rem !important; }
+
+        /* Buttons - super cute rounded style */
+        .stButton > button {
+            border-radius: 25px !important;
+            padding: 0.8rem 1.5rem !important;
+            border: 3px solid #FFB6D9 !important;
+            background: linear-gradient(135deg, #F6A5C0 0%, #FFC4E1 100%) !important;
+            color: white !important;
+            font-weight: 700 !important;
+            box-shadow: 0 6px 20px rgba(246, 165, 192, 0.3) !important;
+            font-size: 1.1rem !important;
+            transition: all 0.2s ease !important;
         }
         .stButton > button:hover {
-            background: #FBC4D9 !important;
-            transform: translateY(-1px) !important;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.10) !important;
+            background: linear-gradient(135deg, #FFC4E1 0%, #F6A5C0 100%) !important;
+            transform: translateY(-3px) rotate(-1deg) !important;
+            box-shadow: 0 8px 25px rgba(246, 165, 192, 0.4) !important;
         }
 
-        /* Widget tiles */
-        .lsr-widget-tile {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            padding: 0.8rem 0.9rem;
-            text-align: center;
-            font-size: 0.8rem;
-            font-weight: 700;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.06);
-            border: 1px solid rgba(255, 255, 255, 0.95);
+        /* Input fields - rounded and cute */
+        input, textarea, select {
+            border-radius: 15px !important;
+            border: 2px solid #F6A5C0 !important;
+            background: white !important;
+            padding: 0.8rem !important;
+            font-size: 1rem !important;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: #D63384 !important;
+            box-shadow: 0 0 0 3px rgba(246, 165, 192, 0.2) !important;
         }
 
-        /* Tabs */
+        /* Selectbox and other widgets */
+        .stSelectbox > div > div {
+            border-radius: 15px !important;
+            border: 2px solid #F6A5C0 !important;
+        }
+
+        /* Tabs - rounded pills */
         .stTabs [role="tab"] {
-            border-radius: 999px !important;
-            padding: 0.4rem 1.2rem !important;
+            border-radius: 20px !important;
+            padding: 0.6rem 1.5rem !important;
             font-weight: 600 !important;
+            border: 2px solid transparent !important;
+            font-size: 1rem !important;
         }
         .stTabs [role="tab"][aria-selected="true"] {
-            background: #F6A5C0 !important;
-            color: #3A2640 !important;
+            background: linear-gradient(135deg, #F6A5C0 0%, #FFC4E1 100%) !important;
+            color: white !important;
+            border: 2px solid #FFB6D9 !important;
+        }
+        .stTabs [role="tab"]:not([aria-selected="true"]) {
+            background: rgba(255, 255, 255, 0.7) !important;
+            color: #D63384 !important;
         }
 
-        /* Hide the "Press Enter" instruction text from inputs - COMPREHENSIVE */
+        /* Info/success/warning boxes - cute rounded */
+        .stAlert, [data-testid="stAlert"] {
+            border-radius: 15px !important;
+            border-left: 5px solid #F6A5C0 !important;
+        }
+
+        /* Hide the "Press Enter" instruction text from inputs */
         .stTextInput [data-testid="InputInstructions"],
         .stTextArea [data-testid="InputInstructions"],
-        .stTextInput .instructions,
-        .stTextArea .instructions,
-        [data-testid="stTextInputInstructions"],
-        [data-testid="stTextAreaInstructions"],
         .stTextInput small,
         .stTextArea small,
-        .stTextInput div[data-testid="stCaptionContainer"],
-        .stTextArea div[data-testid="stCaptionContainer"],
-        .stTextInput + div small,
-        .stTextArea + div small,
         [class*="InputInstructions"],
-        [class*="stCaptionContainer"] small,
-        .stTextInput > div > div > small,
-        .stTextArea > div > div > small,
-        .stTextInput div small,
-        .stTextArea div small,
         div[data-baseweb="base-input"] ~ small,
-        div[data-baseweb="textarea"] ~ small,
-        [data-baseweb="base-input"] + small,
-        [data-baseweb="textarea"] + small,
-        .stTextInput p small,
-        .stTextArea p small {
+        div[data-baseweb="textarea"] ~ small {
             display: none !important;
             visibility: hidden !important;
-            height: 0 !important;
-            width: 0 !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            font-size: 0 !important;
-            line-height: 0 !important;
-            opacity: 0 !important;
         }
 
         /* Hide menu and footer */
         #MainMenu, footer {visibility: hidden;}
         header {visibility: hidden;}
 
-        /* Ensure sidebar is visible */
+        /* Sidebar styling */
         section[data-testid="stSidebar"] {
-            visibility: visible !important;
+            background: linear-gradient(180deg, #FDECF5 0%, #E8D4F5 100%) !important;
+            border-right: 3px solid rgba(246, 165, 192, 0.3) !important;
+        }
+        section[data-testid="stSidebar"] > div {
+            padding-top: 2rem !important;
         }
         </style>
         """,
