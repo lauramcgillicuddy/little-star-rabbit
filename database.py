@@ -115,12 +115,22 @@ def init_database():
 
         # Migration: Add title column to journal_entries if it doesn't exist
         try:
+            # Check if column exists first
             cur.execute("""
-                ALTER TABLE journal_entries
-                ADD COLUMN IF NOT EXISTS title VARCHAR(200)
+                SELECT column_name
+                FROM information_schema.columns
+                WHERE table_name='journal_entries' AND column_name='title'
             """)
-        except Exception:
-            # Column might already exist, that's ok
+            if cur.fetchone() is None:
+                # Column doesn't exist, add it
+                cur.execute("""
+                    ALTER TABLE journal_entries
+                    ADD COLUMN title VARCHAR(200)
+                """)
+                st.success("✅ Added title column to journal_entries table")
+        except Exception as e:
+            # Log but don't fail
+            st.warning(f"Migration note: {str(e)}")
             pass
 
         # Migration: Add unique constraint to usage_tracking if it doesn't exist
