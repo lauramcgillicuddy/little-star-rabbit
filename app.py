@@ -313,8 +313,20 @@ def inject_css():
         .stTextInput .instructions,
         .stTextArea .instructions,
         [data-testid="stTextInputInstructions"],
-        [data-testid="stTextAreaInstructions"] {
+        [data-testid="stTextAreaInstructions"],
+        .stTextInput small,
+        .stTextArea small,
+        .stTextInput div[data-testid="stCaptionContainer"],
+        .stTextArea div[data-testid="stCaptionContainer"],
+        .stTextInput + div small,
+        .stTextArea + div small,
+        [class*="InputInstructions"],
+        [class*="stCaptionContainer"] small {
             display: none !important;
+            visibility: hidden !important;
+            height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         /* Radio and checkboxes - Pink! */
