@@ -113,25 +113,29 @@ def inject_css():
         h2 { font-size: 3.2rem !important; }
         h3 { font-size: 2.6rem !important; }
 
-        /* Flat pastel buttons - BIGGER and centered */
+        /* Flat pastel buttons - consistent sizing! */
         .stButton {
             display: flex !important;
             justify-content: center !important;
-            margin: 0.8rem 0 !important;
+            margin: 1rem 0 !important;
         }
 
         .stButton > button {
             border-radius: 25px !important;
-            padding: 0.9rem 2.5rem !important;
+            padding: 0.85rem 2.2rem !important;
             border: 4px solid #9B6B9E !important;
             background: #E8C5E5 !important;
             color: #6B4C7A !important;
             font-weight: 700 !important;
             box-shadow: none !important;
-            font-size: 1.15rem !important;
+            font-size: 1.1rem !important;
+            line-height: 1.4 !important;
             transition: all 0.2s ease !important;
-            text-transform: lowercase;
-            white-space: nowrap !important;
+            text-transform: lowercase !important;
+            white-space: normal !important;
+            min-width: 200px !important;
+            max-width: 400px !important;
+            text-align: center !important;
         }
         .stButton > button:hover {
             background: #FFD4E5 !important;
